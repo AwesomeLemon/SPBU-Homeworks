@@ -4,7 +4,7 @@
 
 
 #include <stdio.h>
-#include <stdlib.h>
+
 double apow(int a, int n) {
     if (n >= 0) {
     	int res = 1;
@@ -30,8 +30,8 @@ void from10to2(int a) {
 
 
 int fitsbits(int x, int n) {
-	int t=(1 << (n-1));
-	return (!(x +  (~(((t + x) & ((1 << n) -1)) + (~ t + 1)) +1)   ));
+	int t=(1 << (n - 1));
+	return (!(x +  (~(((t + x) & ((1 << n) - 1)) + (~ t + 1)) + 1)   ));
 }
 
 int fsign(int x) {
@@ -46,11 +46,11 @@ int main() {
 	res = fsign(a);
 	printf("%d", res);*/
 
-	/* //FITSBITS
+	//FITSBITS
 	int x, n;
 	scanf("%d%d", &x, &n);
 	res = fitsbits(x, n);
-	printf("%d", res);*/
+	printf("%d", res);
 
 	/* //APOW
 	int x, n;
@@ -63,6 +63,5 @@ int main() {
 	scanf("%d", &a);
 	from10to2(a);
 	*/
-	system("pause");
-		return 0;
+	return 0;
 }
