@@ -8,11 +8,9 @@ void print(int sign, int e, int mant) {
                   else 
                        if (e==255 && mant==0 && sign==1) printf("-INFINTY");
                        else {
-                        	printf("(-1)^%d * 1,",sign);
-                        	int i;
-                        	//for (i=23; i > 0; i--) printf("%d",(mant & (1 << (i-1))) >> (i-1));
-                        	printf("%d",mant);
-                            printf(" * 2^%d",e-127);
+                        	printf("(-1)^%d * 1,%d * 2^%d",sign,mant,e-127);
+                        	//printf("%d",mant);
+                           // printf(" * 2^%d",e-127);
                             }
 }
 void disassemble (int ival) {
@@ -28,6 +26,17 @@ struct {
              float fval;
              } val;
 } data;
+
+struct {
+       union {
+             float fval;
+			 struct {
+				 unsigned int mant:23;
+				 unsigned int e:8;
+				 unsigned int sign:1;
+			 } parts;
+             } val;
+} data1;
 int main () {
     
     /*
@@ -42,5 +51,9 @@ int main () {
 	disassemble(x);
 	*/
 	
+	
+	data1.val.fval=3.0;
+	print(data1.val.parts.sign,data1.val.parts.e,data1.val.parts.mant);
+
    	return 0;
 }
