@@ -1,5 +1,4 @@
 #include <stdio.h>
-#include <stdlib.h>
 int f1();
 int f3() {
     printf("You, my friend, have been hacked.");
