@@ -26,6 +26,7 @@ int main() {
 					printList(list1);
                     break;
                case 'q':
+					clearExit(list1);
                     flag = 0;
                     }
     }

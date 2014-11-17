@@ -17,3 +17,4 @@ void printList(list*);
 int pop(list* ,float);
 void push (node **, float);
 void popFirst(list*);
+void clearExit(list*);

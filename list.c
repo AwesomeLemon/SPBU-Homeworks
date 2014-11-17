@@ -77,3 +77,8 @@ void popFirst(list* list1) {
 		list1->head = t;
 	}
 }
+void clearExit(list* list1) {
+	while (list1->head) {
+		popFirst(list1);
+	}
+}
