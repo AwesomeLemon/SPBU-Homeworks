@@ -4,8 +4,7 @@
 #include "list.h"
 #include <stdlib.h>
 #include <stdio.h>
-
-node* getnewNode(float val) {
+node* getnewNode(vtype val) {
 	node *res = (node*) malloc(sizeof(node));
 	if (res) {
 		res->val = val;
@@ -20,7 +19,8 @@ void printList(list* list1) {
 		curr = list1->head;
 		list1->len=0;
 		while (1) {
-			printf("%f ",curr->val);
+			//printf("%f ",curr->val);
+			printf("%d ",curr->val);
 			list1->len++;
 			if (curr->next) curr = curr->next;
 			else break;
@@ -29,7 +29,7 @@ void printList(list* list1) {
 	}
 }
 
-int pop(list* list1,float val) {
+int pop(list* list1,vtype val) {
 	if (list1->head) {
 		node* curr = list1->head;
 		if (curr->val == val) {
@@ -56,7 +56,7 @@ int pop(list* list1,float val) {
 		return 0;
 	}
 }
-/*void insert(node* el, float val) {
+/*void insert(node* el, vtype val) {
 		node* newNode = getnewNode(val);
 		if (newNode) {
 			newNode->next=el->next;
@@ -64,7 +64,7 @@ int pop(list* list1,float val) {
 		}
 }*/
 
-void push (node **head, float val) {
+void push (node **head, vtype val) {
     node *tmp = getnewNode(val);
     tmp->next = (*head);
     (*head) = tmp;
@@ -81,4 +81,10 @@ void clearExit(list* list1) {
 	while (list1->head) {
 		popFirst(list1);
 	}
+}
+
+list* getNewList(void) {
+	list* list1 = (list*) malloc(sizeof(list));
+	list1->head=0;
+	return list1;
 }

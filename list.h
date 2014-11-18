@@ -1,9 +1,9 @@
 /* Header file with functions for one-way list
 		by Alexander Chebykin
 */
-
+#define vtype int
 typedef struct node {
-	float val;
+	vtype val;
 	struct node* next;
 } node;
 
@@ -12,9 +12,10 @@ typedef struct list {
 	int len;
 } list;
 
-node* getnewNode(float);
+node* getnewNode(vtype);
 void printList(list*);
-int pop(list* ,float);
-void push (node **, float);
+int pop(list* ,vtype);
+void push (node **, vtype);
 void popFirst(list*);
 void clearExit(list*);
+list* getNewList(void);

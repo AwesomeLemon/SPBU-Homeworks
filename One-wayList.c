@@ -6,11 +6,10 @@
 #include "list.h"
 
 int main() {
-    list* list1 = (list*) malloc(sizeof(list));
+    list* list1 = getNewList();
     char c;
     float val;
     int flag=1;
-	list1->head=0;
     while (flag) {
         scanf("%c",&c);
         switch (c) {
