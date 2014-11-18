@@ -4,7 +4,7 @@
 #include "list.h"
 #include <stdlib.h>
 #include <stdio.h>
-node* getnewNode(vtype val) {
+node* getNewNode(vtype val) {
 	node *res = (node*) malloc(sizeof(node));
 	if (res) {
 		res->val = val;
@@ -29,7 +29,7 @@ void printList(list* list1) {
 	}
 }
 
-int pop(list* list1,vtype val) {
+int popValue(list* list1,vtype val) {
 	if (list1->head) {
 		node* curr = list1->head;
 		if (curr->val == val) {
@@ -57,17 +57,32 @@ int pop(list* list1,vtype val) {
 	}
 }
 /*void insert(node* el, vtype val) {
-		node* newNode = getnewNode(val);
+		node* newNode = getNewNode(val);
 		if (newNode) {
 			newNode->next=el->next;
 			el->next = newNode;
 		}
 }*/
 
-void push (node **head, vtype val) {
-    node *tmp = getnewNode(val);
+void pushFront (node **head, vtype val) {
+    node *tmp = getNewNode(val);
     tmp->next = (*head);
     (*head) = tmp;
+}
+
+void pushBack(list* list1, vtype val) {
+	if (list1->head) {
+		node* curr;
+		curr = list1->head;
+		while (1) {
+			if (curr->next) curr = curr->next;
+			else break;
+		}
+		curr->next = getNewNode(val);
+	}
+	else {
+		pushFront(&(list1->head),val);
+	}
 }
 
 void popFirst(list* list1) {
@@ -87,4 +102,15 @@ list* getNewList(void) {
 	list* list1 = (list*) malloc(sizeof(list));
 	list1->head=0;
 	return list1;
+}
+
+list* reverseList(list* list1) {
+	int i;
+	list* reverse = getNewList();
+	for (i=0; i<list1->len; i++) {
+		pushFront(&(reverse->head),list1->head->val);
+		popFirst(list1);
+	}
+	reverse->len = list1->len;
+	return reverse;
 }
