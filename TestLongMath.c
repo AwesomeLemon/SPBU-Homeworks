@@ -42,6 +42,5 @@ int main() {
 			z = longNum_sub(*x,*y);
 	}
 	printLongNum(z);
-	system("pause");
 	return 0;
 }

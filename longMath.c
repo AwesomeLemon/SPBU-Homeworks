@@ -23,15 +23,15 @@ longNum longNum_add(longNum x, longNum y) {
 		z.sign = x.sign;
 		while (curr1 && curr2) {
 			int temp;
-			temp = curr1->val+curr2->val+overflow;
-			pushFront(&(z.digits->head),temp%10);
-			overflow = temp /10;
+			temp = curr1->val + curr2->val + overflow;
+			pushFront(&(z.digits->head), temp%10);
+			overflow = temp / 10;
 			curr1 = curr1->next;
 			curr2 = curr2->next;
 		}
 		while (curr1) {
-			pushFront(&(z.digits->head),(curr1->val+overflow)% 10);
-			overflow = (curr1->val+overflow) / 10;
+			pushFront(&(z.digits->head),(curr1->val + overflow) % 10);
+			overflow = (curr1->val + overflow) / 10;
 			curr1 = curr1->next;
 		}
 		while (curr2) {
@@ -40,7 +40,7 @@ longNum longNum_add(longNum x, longNum y) {
 			curr2 = curr2->next;
 		}
 		if (overflow) {
-			pushFront(&(z.digits->head),overflow);
+			pushFront(&(z.digits->head), overflow);
 		}
 	}
 	else {
@@ -77,9 +77,9 @@ longNum longNum_add(longNum x, longNum y) {
 						temp = curr1->val-curr2->val + 10;
 						curr1->next->val--;
 					}
-				pushFront(&(z.digits->head),temp);
-				curr1 = curr1->next;
-				curr2 = curr2->next;
+					pushFront(&(z.digits->head),temp);
+					curr1 = curr1->next;
+					curr2 = curr2->next;
 			}
 			while (curr1) {
 				if (curr1->val >= 0) pushFront(&(z.digits->head),curr1->val);
@@ -102,9 +102,9 @@ longNum longNum_add(longNum x, longNum y) {
 						temp = curr2->val - curr1->val + 10;
 						curr2->next->val--;
 					}
-				pushFront(&(z.digits->head),temp);
-				curr1 = curr1->next;
-				curr2 = curr2->next;
+					pushFront(&(z.digits->head),temp);
+					curr1 = curr1->next;
+					curr2 = curr2->next;
 			}
 			while (curr2) {
 				pushFront(&(z.digits->head),curr2->val);
