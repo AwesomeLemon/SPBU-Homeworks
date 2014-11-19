@@ -1,7 +1,7 @@
-/* Header file with functions for one-way list
+/* Header file with functions for singly linked list
 		by Alexander Chebykin
 */
-#define vtype float
+#define vtype int
 typedef struct node {
 	vtype val;
 	struct node* next;
@@ -14,7 +14,7 @@ typedef struct list {
 
 node* getNewNode(vtype);
 void printList(list*);
-int removeValue(list* ,vtype);
+int removeValue(list*, vtype);
 void pushFront (node **, vtype);
 void pushBack(list*, vtype);
 void pop(list*);

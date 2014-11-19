@@ -15,8 +15,7 @@ int main() {
         switch (c) {
                case 'a':
                     scanf("%f",&val);
-					//pushFront(&(list1->head),val);
-					pushBack(list1,val);
+					pushFront(&(list1->head),val);
                     break;
                case 'r':
                     scanf("%f",&val);

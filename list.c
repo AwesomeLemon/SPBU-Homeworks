@@ -1,4 +1,4 @@
-/* File with functions for one-way list
+/* File with functions for singly linked list
 		by Alexander Chebykin
 */
 #include "list.h"
@@ -10,6 +10,10 @@ node* getNewNode(vtype val) {
 		res->val = val;
 		res->next = 0;
 	}
+	else {
+		printf("Error: Memory cannot be allocated. Exiting.");
+		exit(0);
+	}
 	return res;
 }
 
@@ -18,11 +22,13 @@ void printList(list* list1) {
 		node* curr;
 		curr = list1->head;
 		while (curr) {
-			printf("%f ",curr->val);
+			//printf("%f ",curr->val);
+			printf("%d ",curr->val);
 			curr = curr->next;
 		}
 		printf("\n");
 	}
+	else printf("The list is empty.");
 }
 
 int removeValue(list* list1, vtype val) {
@@ -33,7 +39,7 @@ int removeValue(list* list1, vtype val) {
 				return 1;
 		}
 		else { 
-			while (curr->next != 0) {
+			while (curr->next) {
 				  if (curr->next->val != val)
 					  curr = curr->next;
 				  else {
@@ -76,7 +82,7 @@ void pushBack(list* list1, vtype val) {
 		curr->next = getNewNode(val);
 	}
 	else {
-		pushFront(&(list1->head),val);
+		pushFront(&(list1->head), val);
 	}
 }
 
@@ -103,7 +109,7 @@ list* reverseList(list* list1) {
 	int i;
 	list* reverse = getNewList();
 	for (i=0; i < list1->len; i++) {
-		pushFront(&(reverse->head),list1->head->val);
+		pushFront(&(reverse->head), list1->head->val);
 		pop(list1);
 	}
 	reverse->len = list1->len;
