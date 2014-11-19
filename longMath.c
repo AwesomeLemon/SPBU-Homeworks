@@ -15,61 +15,60 @@ longNum longNum_add(longNum x, longNum y) {
 	longNum z;
 	node* curr1;
 	node* curr2;
-	int overflow;
 	z.digits = getNewList();
 	curr1 = x.digits->head;
 	curr2 = y.digits->head;
-	overflow = 0;
 	if (x.sign == y.sign) {
+		int overflow = 0;
+		z.sign = x.sign;
 		while (curr1 && curr2) {
 			int temp;
 			temp = curr1->val+curr2->val+overflow;
-			pushBack(z.digits,temp%10);
+			pushFront(&(z.digits->head),temp%10);
 			overflow = temp /10;
 			curr1 = curr1->next;
 			curr2 = curr2->next;
 		}
 		while (curr1) {
-			pushBack(z.digits,(curr1->val+overflow)% 10);
+			pushFront(&(z.digits->head),(curr1->val+overflow)% 10);
 			overflow = (curr1->val+overflow) / 10;
 			curr1 = curr1->next;
 		}
 		while (curr2) {
-			pushBack(z.digits,(curr2->val+overflow)% 10);
+			pushFront(&(z.digits->head),(curr2->val+overflow)% 10);
 			overflow = (curr2->val+overflow) / 10;
 			curr2 = curr2->next;
 		}
 		if (overflow) {
-			pushBack(z.digits,overflow);
+			pushFront(&(z.digits->head),overflow);
 		}
 	}
 	else {
-		int bigger=0;
-		while (curr1 && curr2) {
-			if (curr1->val < curr2->val) {
-				bigger=0;
-				break;
-			}
-			else 
-				if (curr1->val > curr2->val) {
-					bigger=1;
+		int bigger;
+		if (x.digits->len > y.digits->len) bigger = 1;
+		else if (y.digits->len > x.digits->len) bigger=0;
+		else {
+			while (curr1 && curr2) {
+				if (curr1->val < curr2->val) {
+					bigger=0;
 					break;
 				}
-				else {
-					curr1 = curr1->next;
-					curr2 = curr2->next;
-				}
+				else 
+					if (curr1->val > curr2->val) {
+						bigger=1;
+						break;
+					}
+					else {
+						curr1 = curr1->next;
+						curr2 = curr2->next;
+					}
+			}
 		}
 
-		x.digits = reverseList(x.digits);
-		y.digits = reverseList(y.digits);
-
-		curr1 = x.digits->head;
-		curr2 = y.digits->head;
 		if (bigger) {
 			z.sign = x.sign;
 			while (curr1 && curr2) {
-				int temp;
+				int temp=0;
 				if (curr1->val > curr2->val) {
 					temp = curr1->val-curr2->val;
 				}
@@ -78,24 +77,23 @@ longNum longNum_add(longNum x, longNum y) {
 						temp = curr1->val-curr2->val + 10;
 						curr1->next->val--;
 					}
-					else {
-						curr1 = curr1->next;
-						curr2 = curr2->next;
-						continue;
-					}
 				pushFront(&(z.digits->head),temp);
 				curr1 = curr1->next;
 				curr2 = curr2->next;
 			}
 			while (curr1) {
-				pushFront(&(z.digits->head),curr1->val);
+				if (curr1->val >= 0) pushFront(&(z.digits->head),curr1->val);
+				else {
+					pushFront(&(z.digits->head),curr1->val+10);
+					curr1->next->val--;
+				}
 				curr1 = curr1->next;
 			}
 		}
 		else {
 			z.sign = y.sign;
 			while (curr1 && curr2) {
-				int temp;
+				int temp = 0;
 				if (curr2->val > curr1->val) {
 					temp = curr2->val-curr1->val;
 				}
@@ -103,11 +101,6 @@ longNum longNum_add(longNum x, longNum y) {
 					if (curr2->val < curr1->val) {
 						temp = curr2->val - curr1->val + 10;
 						curr2->next->val--;
-					}
-					else {
-						curr1 = curr1->next;
-						curr2 = curr2->next;
-						continue;
 					}
 				pushFront(&(z.digits->head),temp);
 				curr1 = curr1->next;
@@ -120,4 +113,10 @@ longNum longNum_add(longNum x, longNum y) {
 		}
 	}
 	return z;
+}
+
+void printLongNum(longNum x) {
+	if (x.sign) printf("-");
+	else printf("+");
+	printList(x.digits);
 }
