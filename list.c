@@ -10,6 +10,10 @@ node* getNewNode(vtype val) {
 		res->val = val;
 		res->next = 0;
 	}
+	else {
+		printf("Error: Memory cannot be allocated. Exiting.");
+		exit(0);
+	}
 	return res;
 }
 
@@ -17,27 +21,25 @@ void printList(list* list1) {
 	if (list1->head) {
 		node* curr;
 		curr = list1->head;
-		list1->len=0;
-		while (1) {
+		while (curr) {
 			//printf("%f ",curr->val);
 			printf("%d ",curr->val);
-			list1->len++;
-			if (curr->next) curr = curr->next;
-			else break;
+			curr = curr->next;
 		}
 		printf("\n");
 	}
+	else printf("The list is empty.");
 }
 
-int popValue(list* list1,vtype val) {
+int removeValue(list* list1, vtype val) {
 	if (list1->head) {
 		node* curr = list1->head;
 		if (curr->val == val) {
-				popFirst(list1);
+				pop(list1);
 				return 1;
 		}
 		else { 
-			while (curr->next != 0) {
+			while (curr->next) {
 				  if (curr->next->val != val)
 					  curr = curr->next;
 				  else {
@@ -74,18 +76,17 @@ void pushBack(list* list1, vtype val) {
 	if (list1->head) {
 		node* curr;
 		curr = list1->head;
-		while (1) {
-			if (curr->next) curr = curr->next;
-			else break;
+		while (curr->next) {
+			curr = curr->next;
 		}
 		curr->next = getNewNode(val);
 	}
 	else {
-		pushFront(&(list1->head),val);
+		pushFront(&(list1->head), val);
 	}
 }
 
-void popFirst(list* list1) {
+void pop(list* list1) {
 	if (list1->head) {
 		node* t = list1->head->next;
 		free(list1->head);
@@ -94,22 +95,22 @@ void popFirst(list* list1) {
 }
 void clearExit(list* list1) {
 	while (list1->head) {
-		popFirst(list1);
+		pop(list1);
 	}
 }
 
 list* getNewList(void) {
 	list* list1 = (list*) malloc(sizeof(list));
-	list1->head=0;
+	list1->head = 0;
 	return list1;
 }
 
 list* reverseList(list* list1) {
 	int i;
 	list* reverse = getNewList();
-	for (i=0; i<list1->len; i++) {
-		pushFront(&(reverse->head),list1->head->val);
-		popFirst(list1);
+	for (i=0; i < list1->len; i++) {
+		pushFront(&(reverse->head), list1->head->val);
+		pop(list1);
 	}
 	reverse->len = list1->len;
 	return reverse;
