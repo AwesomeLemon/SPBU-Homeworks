@@ -27,11 +27,11 @@ int main() {
         switch (c) {
                case 'a':
                     scanf("%f",&val);
-					push(&(list1->head),val);
+					pushFront(&(list1->head),val);
                     break;
                case 'r':
                     scanf("%f",&val);
-                    pop(list1,val);
+                    popValue(list1,val);
                     break;
                case 'p':
 					printList(list1);
