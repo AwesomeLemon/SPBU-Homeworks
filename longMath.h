@@ -1,3 +1,6 @@
+/* Header file with functions for long numbers
+          by Alexander Chebykin
+*/
 #include "list.h"
 
 typedef struct longNum {

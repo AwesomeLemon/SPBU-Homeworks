@@ -25,5 +25,7 @@ int main() {
 	}
 	printLongNum(z);
 	system("pause");
+	free(x);
+	free(y);
 	return 0;
 }

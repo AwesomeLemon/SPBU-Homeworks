@@ -1,4 +1,4 @@
-/* Header file with functions for one-way list
+/* Header file with functions for singly linked list
 		by Alexander Chebykin
 */
 #define vtype int

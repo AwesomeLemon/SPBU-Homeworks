@@ -1,3 +1,6 @@
+/* File with functions for long numbers
+          by Alexander Chebykin
+*/
 #include "longMath.h"
 #include <stdlib.h>
 #include <stdio.h>

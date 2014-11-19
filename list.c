@@ -1,4 +1,4 @@
-/* File with functions for one-way list
+/* File with functions for singly linked list
 		by Alexander Chebykin
 */
 #include "list.h"
