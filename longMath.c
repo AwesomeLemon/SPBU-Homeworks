@@ -28,29 +28,34 @@ longNum longNum_add(longNum x, longNum y) {
 			int temp;
 			temp = curr1->val + curr2->val + overflow;
 			pushFront(&(z.digits->head), temp % 10);
+			z.digits->len++;
 			overflow = temp / 10;
 			curr1 = curr1->next;
 			curr2 = curr2->next;
 		}
 		while (curr1) {
 			pushFront(&(z.digits->head), (curr1->val + overflow) % 10);
+			z.digits->len++;
 			overflow = (curr1->val + overflow) / 10;
 			curr1 = curr1->next;
 		}
 		while (curr2) {
 			pushFront(&(z.digits->head), (curr2->val+overflow) % 10);
+			z.digits->len++;
 			overflow = (curr2->val+overflow) / 10;
 			curr2 = curr2->next;
 		}
 		if (overflow) {
 			pushFront(&(z.digits->head), overflow);
+			z.digits->len++;
 		}
 	}
 	else {
-		int bigger = isBigger(x, y);
+		int bigger = isLonger(x, y);
 		if (bigger == 2) { //For equal numbers. To avoid final answer of '-0'
 			z.sign = 0;
 			pushFront(&(z.digits->head), 0);
+			z.digits->len++;
 			return z;
 		}
 		else {
@@ -70,13 +75,18 @@ longNum longNum_add(longNum x, longNum y) {
 							curr1->next->val--;
 						}
 						pushFront(&(z.digits->head), temp);
+						z.digits->len++;
 						curr1 = curr1->next;
 						curr2 = curr2->next;
 				}
 				while (curr1) {
-					if (curr1->val >= 0) pushFront(&(z.digits->head), curr1->val);
+					if (curr1->val >= 0) {
+						pushFront(&(z.digits->head), curr1->val);
+						z.digits->len++;
+					}
 					else {
 						pushFront(&(z.digits->head), curr1->val + 10);
+						z.digits->len++;
 						curr1->next->val--;
 					}
 					curr1 = curr1->next;
@@ -95,17 +105,20 @@ longNum longNum_add(longNum x, longNum y) {
 							curr2->next->val--;
 						}
 						pushFront(&(z.digits->head),temp);
+						z.digits->len++;
 						curr1 = curr1->next;
 						curr2 = curr2->next;
 				}
 				while (curr2) {
 					pushFront(&(z.digits->head), curr2->val);
+					z.digits->len++;
 					curr2 = curr2->next;
 				}
 			}
 		}
-		return z;
+		
 	}
+	return z;
 }
 
 void printLongNum(longNum x) {
@@ -128,8 +141,8 @@ void printLongNum(longNum x) {
 	else printf("The list is empty.");
 }
 
-int isBigger(longNum x,longNum y) {
-		int bigger = 2; //For equal numbers. To avoid final answer of '-0'
+int isLonger(longNum x,longNum y) {//SIGNS ARE NOT CONSIDERED!!!
+		int bigger = 2; //For equal numbers. To avoid final answer of '-0' in addition and subtraction
 		node* curr1 = x.digits->head;
 		node* curr2 = y.digits->head;
 		if (x.digits->len > y.digits->len) bigger = 1;
@@ -174,4 +187,188 @@ longNum* longNum_scan(void) {
 		scanf("%c",&c);
 	}
 	return x;
+}
+
+longNum longNum_mul(longNum x, longNum y) {
+	node* curr1;
+	node* curr2;
+	longNum res;
+	int tempsign;
+	int overflow = 0;
+	curr1 = x.digits->head;
+	curr2 = y.digits->head;
+	res.digits = getNewList();
+	pushFront(&(res.digits->head), 0);
+	res.digits->len++;
+	res.sign = 0;
+	if (x.sign == y.sign) {
+		tempsign = 0;
+		x.sign = 0;
+		y.sign = 0;
+	}
+	else {
+		tempsign = 1;
+		x.sign = 0;
+		y.sign = 0;
+	}
+	if(isLonger(x,y)) {
+		int i = 0;
+		int j;
+		int len = y.digits->len;
+		for (i; i < len; i++) {
+			longNum t;
+			int curMul = y.digits->head->val;
+			t.digits = getNewList();
+			t.sign = 0;
+			t.digits->len = 0;
+			while (curr1) {
+				int temp;
+				temp = curr1->val * curMul + overflow;
+				pushFront(&(t.digits->head), temp % 10);
+				t.digits->len++;
+				overflow = temp / 10;
+				curr1 = curr1->next;
+			}
+			if (overflow) {
+				pushFront(&(t.digits->head), overflow);
+				t.digits->len++;
+			}
+			for (j = i; j > 0; j--) {
+				pushBack(t.digits, 0);
+				t.digits->len++;
+			}
+			t.digits = reverseList(t.digits);
+			res = longNum_add(res, t);
+			pop(y.digits);
+			curr1 = x.digits->head;
+		}
+	}
+	else {
+		int i = 0;
+		int j;
+		int len = x.digits->len;
+		for (i; i < len; i++) {
+			longNum t;
+			int curMul = x.digits->head->val;
+			t.digits = getNewList();
+			t.sign = 0;
+			t.digits->len = 0;
+			while (curr2) {
+				int temp;
+				temp = curr2->val * curMul + overflow;
+				pushFront(&(t.digits->head), temp % 10);
+				t.digits->len++;
+				overflow = temp / 10;
+				curr2 = curr2->next;
+			}
+			if (overflow) {
+				pushFront(&(t.digits->head), overflow);
+				t.digits->len++;
+			}
+			for (j = i; j > 0; j--) {
+				pushBack(t.digits, 0);
+				t.digits->len++;
+			}
+			t.digits = reverseList(t.digits);
+			res = longNum_add(res, t);
+			pop(x.digits);
+			curr2 = y.digits->head;
+		}
+	}
+	res.sign = tempsign;
+	return res;
+}
+
+int isBigger(longNum x,longNum y) {
+		int bigger = 2; //For equal numbers. To avoid final answer of '-0' in addition and subtraction
+		if (!(x.sign || y.sign)) { //both are positive
+			node* curr1 = x.digits->head;
+			node* curr2 = y.digits->head;
+			if (x.digits->len > y.digits->len) bigger = 1;
+			else if (y.digits->len > x.digits->len) bigger = 0;
+			else {
+				while (curr1 && curr2) {
+					if (curr1->val < curr2->val) {
+						bigger=0;
+						break;
+					}
+					else 
+						if (curr1->val > curr2->val) {
+							bigger=1;
+							break;
+						}
+						else {
+							curr1 = curr1->next;
+							curr2 = curr2->next;
+						}
+				}
+			}
+		}
+		else {
+			if(!x.sign && y.sign) bigger = 1;
+			else 
+				if (x.sign && !y.sign) bigger = 0;
+				else {
+					x.sign = 0;
+					y.sign = 0;
+					bigger = 1 - isBigger(x,y);
+				}
+		}
+		return bigger;
+}
+
+longNum longNum_div(longNum x, longNum y) {
+	int tempsign;
+	longNum res;
+	longNum t;
+	node* curr1;
+	node* curr2;
+	res.sign = 0;
+	res.digits = getNewList();
+	t.sign = 0;
+	t.digits = getNewList();
+	if (!isLonger(x,y)) {
+		pushBack(res.digits, 0);
+		res.digits->len++;
+		return res;
+	}
+	if (x.sign == y.sign) {
+		tempsign = 0;
+		x.sign = 0;
+		y.sign = 0;
+	}
+	else {
+		tempsign = 1;
+		x.sign = 0;
+		y.sign = 0;
+	}
+	x.digits = reverseList(x.digits);
+	//y.digits = reverseList(y.digits);
+	curr1 = x.digits->head;
+	curr2 = y.digits->head;
+	while (curr1) {
+		pushFront(&(t.digits->head), curr1->val);
+		t.digits->len++;
+		if (isLonger(t,y)) {
+			int count = 0;
+			t.digits = reverseList(t.digits);
+			y.digits = reverseList(y.digits);
+			while (isLonger(t,y)) {
+				t.digits = reverseList(t.digits);
+				y.digits = reverseList(y.digits);
+				t = longNum_sub(t,y);
+				while ((t.digits->head->val == 0) && (t.digits->len != 1)){
+					pop(t.digits);
+				}
+				count++;
+			y.digits = reverseList(y.digits);
+			}
+			y.digits = reverseList(y.digits);
+			t.digits = reverseList(t.digits);
+			pushBack(res.digits, count);
+			res.digits->len++;
+		}
+		curr1 = curr1->next;
+	}
+	return res;
 }

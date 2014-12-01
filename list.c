@@ -46,6 +46,7 @@ int removeValue(list* list1, vtype val) {
 					   node* t = curr->next->next;
 					   free(curr->next);
 					   curr->next = t;
+					   list1->len--;
 					   return 1;
 				  }
 			}
@@ -91,6 +92,7 @@ void pop(list* list1) {
 		node* t = list1->head->next;
 		free(list1->head);
 		list1->head = t;
+		list1->len--;
 	}
 }
 void clearExit(list* list1) {
@@ -102,6 +104,7 @@ void clearExit(list* list1) {
 list* getNewList(void) {
 	list* list1 = (list*) malloc(sizeof(list));
 	list1->head = 0;
+	list1->len = 0;
 	return list1;
 }
 
@@ -110,6 +113,7 @@ list* reverseList(list* list1) {
 	list* reverse = getNewList();
 	for (i=0; i < list1->len; i++) {
 		pushFront(&(reverse->head), list1->head->val);
+		list1->len++;
 		pop(list1);
 	}
 	reverse->len = list1->len;

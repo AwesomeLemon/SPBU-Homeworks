@@ -22,6 +22,12 @@ int main() {
 			break;
 		case '-':
 			z = longNum_sub(*x, *y);
+			break;
+		case '*':
+			z = longNum_mul(*x, *y);
+			break;
+		case '/':
+			z = longNum_div(*x, *y);
 	}
 	printLongNum(z);
 	system("pause");

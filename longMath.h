@@ -10,7 +10,10 @@ typedef struct longNum {
 
 longNum longNum_add(longNum, longNum);
 longNum longNum_sub(longNum, longNum);
+longNum longNum_mul(longNum, longNum);
+longNum longNum_div(longNum, longNum);
 longNum longNum_neg(longNum);
 void printLongNum(longNum);
+int isLonger(longNum, longNum);
 int isBigger(longNum, longNum);
 longNum* longNum_scan(void);
