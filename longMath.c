@@ -1,8 +1,10 @@
 /* File with functions for long numbers
           by Alexander Chebykin
 */
-#include "longMath.h"
+#define _CRTDBG_MAP_ALLOC
 #include <stdlib.h>
+#include <crtdbg.h>
+#include "longMath.h"
 #include <stdio.h>
 #include <math.h>
 longNum longNum_neg(longNum x) {
@@ -51,7 +53,7 @@ longNum longNum_add(longNum x, longNum y) {
 		}
 	}
 	else {
-		int bigger = isLonger(x, y);
+		int bigger = isLonger(&x, &y);
 		if (bigger == 2) { //For equal numbers. To avoid final answer of '-0'
 			z.sign = 0;
 			pushFront(&(z.digits->head), 0);
@@ -143,17 +145,17 @@ void printLongNum(longNum x) {
 	else printf("The list is empty.");
 }
 //Big-endian
-int isLonger(longNum x,longNum y) {//SIGNS ARE NOT CONSIDERED!!!
+int isLonger(longNum* x,longNum* y) {//SIGNS ARE NOT CONSIDERED!!!
 		int bigger = 2; //For equal numbers. To avoid final answer of '-0' in addition and subtraction
 		node* curr1;
 		node* curr2;
-		if (x.digits->len > y.digits->len) bigger = 1;
-		else if (y.digits->len > x.digits->len) bigger = 0;
+		if (x->digits->len > y->digits->len) bigger = 1;
+		else if (y->digits->len > x->digits->len) bigger = 0;
 		else {
-			x.digits = reverseList(x.digits);
-			y.digits = reverseList(y.digits);
-			curr1 = x.digits->head;
-			curr2 = y.digits->head;
+			x->digits = reverseList(x->digits);
+			y->digits = reverseList(y->digits);
+			curr1 = x->digits->head;
+			curr2 = y->digits->head;
 			while (curr1 && curr2) {
 				if (curr1->val < curr2->val) {
 					bigger=0;
@@ -169,9 +171,9 @@ int isLonger(longNum x,longNum y) {//SIGNS ARE NOT CONSIDERED!!!
 						curr2 = curr2->next;
 					}
 			}
+			x->digits = reverseList(x->digits);
+			y->digits = reverseList(y->digits);
 		}
-		x.digits = reverseList(x.digits);
-		y.digits = reverseList(y.digits);
 		return bigger;
 }
 //Little-endian
@@ -219,7 +221,7 @@ longNum longNum_mul(longNum x, longNum y) {
 		x.sign = 0;
 		y.sign = 0;
 	}
-	if(isLonger(x,y)) {
+	if(isLonger(&x,&y)) {
 		int i = 0;
 		int j;
 		int len = y.digits->len;
@@ -283,6 +285,7 @@ longNum longNum_mul(longNum x, longNum y) {
 			curr2 = y.digits->head;
 		}
 	}
+//	res.digits = reverseList(res.digits);
 	res.sign = tempsign;
 	return res;
 }
@@ -337,7 +340,7 @@ longNum longNum_div(longNum x, longNum y) {
 	res.digits = getNewList();
 	t.sign = 0;
 	t.digits = getNewList();
-	if (!isLonger(x,y)) {
+	if (!isLonger(&x,&y)) {
 		pushBack(res.digits, 0);
 		res.digits->len++;
 		return res;
@@ -353,19 +356,23 @@ longNum longNum_div(longNum x, longNum y) {
 		y.sign = 0;
 	}
 	x.digits = reverseList(x.digits);
-	//y.digits = reverseList(y.digits);
+
+	//check if y == 0
+	y.digits = reverseList(y.digits);
+	if (!(y.digits->head->val)) {
+		printf("DIVISION BY ZERO");
+		exit(0);
+	}
+	y.digits = reverseList(y.digits);
+
 	curr1 = x.digits->head;
 	curr2 = y.digits->head;
 	while (curr1) {
 		pushFront(&(t.digits->head), curr1->val);
 		t.digits->len++;
-		if (isLonger(t,y)) {
+		if (isLonger(&t,&y)) {
 			int count = 0;
-			//t.digits = reverseList(t.digits);
-			//y.digits = reverseList(y.digits);
-			while (isLonger(t,y)) {
-				//t.digits = reverseList(t.digits);
-				//y.digits = reverseList(y.digits);
+			while (isLonger(&t,&y)) {
 				t = longNum_sub(t,y);
 				t.digits = reverseList(t.digits);
 				while ((t.digits->head->val == 0) && (t.digits->len != 1)){
@@ -373,10 +380,7 @@ longNum longNum_div(longNum x, longNum y) {
 				}
 				t.digits = reverseList(t.digits);
 				count++;
-			//y.digits = reverseList(y.digits);
 			}
-			//y.digits = reverseList(y.digits);
-			//t.digits = reverseList(t.digits);
 			pushFront(&(res.digits->head), count);
 			res.digits->len++;
 		}

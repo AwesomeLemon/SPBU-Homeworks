@@ -1,8 +1,10 @@
 /* File with functions for singly linked list
 		by Alexander Chebykin
 */
-#include "list.h"
+#define _CRTDBG_MAP_ALLOC
 #include <stdlib.h>
+#include <crtdbg.h>
+#include "list.h"
 #include <stdio.h>
 node* getNewNode(vtype val) {
 	node *res = (node*) malloc(sizeof(node));

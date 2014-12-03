@@ -1,3 +1,6 @@
+#define _CRTDBG_MAP_ALLOC
+#include <stdlib.h>
+#include <crtdbg.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include "longMath.h"
@@ -30,8 +33,14 @@ int main() {
 			z = longNum_div(*x, *y);
 	}
 	printLongNum(z);
-	system("pause");
+	clearExit(x->digits);
+	clearExit(y->digits);
+	free(x->digits);
+	free(y->digits);
 	free(x);
 	free(y);
+	clearExit(z.digits);
+	free(z.digits);
+	_CrtDumpMemoryLeaks();
 	return 0;
 }
