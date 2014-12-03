@@ -159,6 +159,11 @@ void calculate(list* list1) {
 				b = list1->head->next->val;
 				pop(list1);
 				pop(list1);
+				if (!a) {
+					printf("DIVISION BY ZERO");
+					exit(0);
+				}
+				else
 				pushFront(&(list1->head) ,b / a);
 		}
 	}

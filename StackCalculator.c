@@ -1,8 +1,10 @@
-/* Main file for one-way list
+/* Main file for stack calculator for integers
 		by Alexander Chebykin
 */
-#include <stdio.h>
+#define _CRTDBG_MAP_ALLOC
 #include <stdlib.h>
+#include <crtdbg.h>
+#include <stdio.h>
 #include "list.h"
 
 int main() {
@@ -13,16 +15,17 @@ int main() {
     while (flag) {
         scanf("%c",&c);
         switch (c) {
-               case 'p':
-					printList(list1);
-                    break;
                case 'q':
 					clearExit(list1);
                     flag = 0;
 					break;
 			   case 'c':
 				   calculate(list1);
+				   printList(list1);
+				   pop(list1);
 		}
     }
+	free(list1);
+	_CrtDumpMemoryLeaks();
 	return 0;
 }
