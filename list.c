@@ -110,11 +110,13 @@ list* getNewList(void) {
 
 list* reverseList(list* list1) {
 	int i;
+	node* curr = list1->head;
 	list* reverse = getNewList();
 	for (i=0; i < list1->len; i++) {
-		pushFront(&(reverse->head), list1->head->val);
-		list1->len++;
-		pop(list1);
+		pushFront(&(reverse->head), curr->val);
+		//list1->len++;
+		curr = curr->next;
+		//pop(list1);
 	}
 	reverse->len = list1->len;
 	return reverse;

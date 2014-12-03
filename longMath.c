@@ -13,7 +13,7 @@ longNum longNum_neg(longNum x) {
 longNum longNum_sub(longNum x, longNum y) {
 	return longNum_add(x, longNum_neg(y));
 }
-
+//Little-endian
 longNum longNum_add(longNum x, longNum y) {
 	longNum z;
 	node* curr1;
@@ -118,14 +118,16 @@ longNum longNum_add(longNum x, longNum y) {
 		}
 		
 	}
+	z.digits = reverseList(z.digits);
 	return z;
 }
-
+//Big-endian
 void printLongNum(longNum x) {
 	if (x.sign) printf("-");
 	if (x.digits->head) {
 		node* curr;
 		int flag = 1; //to avoid printing leading zeroes
+		x.digits = reverseList(x.digits);
 		curr = x.digits->head;
 		while (curr) {
 			//printf("%f ",curr->val);
@@ -140,14 +142,18 @@ void printLongNum(longNum x) {
 	}
 	else printf("The list is empty.");
 }
-
+//Big-endian
 int isLonger(longNum x,longNum y) {//SIGNS ARE NOT CONSIDERED!!!
 		int bigger = 2; //For equal numbers. To avoid final answer of '-0' in addition and subtraction
-		node* curr1 = x.digits->head;
-		node* curr2 = y.digits->head;
+		node* curr1;
+		node* curr2;
 		if (x.digits->len > y.digits->len) bigger = 1;
 		else if (y.digits->len > x.digits->len) bigger = 0;
 		else {
+			x.digits = reverseList(x.digits);
+			y.digits = reverseList(y.digits);
+			curr1 = x.digits->head;
+			curr2 = y.digits->head;
 			while (curr1 && curr2) {
 				if (curr1->val < curr2->val) {
 					bigger=0;
@@ -164,9 +170,11 @@ int isLonger(longNum x,longNum y) {//SIGNS ARE NOT CONSIDERED!!!
 					}
 			}
 		}
+		x.digits = reverseList(x.digits);
+		y.digits = reverseList(y.digits);
 		return bigger;
 }
-
+//Little-endian
 longNum* longNum_scan(void) {
 	char c;
 	longNum* x = (longNum*) malloc(sizeof(longNum));
@@ -188,7 +196,7 @@ longNum* longNum_scan(void) {
 	}
 	return x;
 }
-
+//Little-endian
 longNum longNum_mul(longNum x, longNum y) {
 	node* curr1;
 	node* curr2;
@@ -278,9 +286,11 @@ longNum longNum_mul(longNum x, longNum y) {
 	res.sign = tempsign;
 	return res;
 }
-
+//Big-endian
 int isBigger(longNum x,longNum y) {
 		int bigger = 2; //For equal numbers. To avoid final answer of '-0' in addition and subtraction
+		x.digits = reverseList(x.digits);
+		y.digits = reverseList(y.digits);
 		if (!(x.sign || y.sign)) { //both are positive
 			node* curr1 = x.digits->head;
 			node* curr2 = y.digits->head;
@@ -316,7 +326,7 @@ int isBigger(longNum x,longNum y) {
 		}
 		return bigger;
 }
-
+//Big-endian
 longNum longNum_div(longNum x, longNum y) {
 	int tempsign;
 	longNum res;
@@ -351,21 +361,23 @@ longNum longNum_div(longNum x, longNum y) {
 		t.digits->len++;
 		if (isLonger(t,y)) {
 			int count = 0;
-			t.digits = reverseList(t.digits);
-			y.digits = reverseList(y.digits);
+			//t.digits = reverseList(t.digits);
+			//y.digits = reverseList(y.digits);
 			while (isLonger(t,y)) {
-				t.digits = reverseList(t.digits);
-				y.digits = reverseList(y.digits);
+				//t.digits = reverseList(t.digits);
+				//y.digits = reverseList(y.digits);
 				t = longNum_sub(t,y);
+				t.digits = reverseList(t.digits);
 				while ((t.digits->head->val == 0) && (t.digits->len != 1)){
 					pop(t.digits);
 				}
+				t.digits = reverseList(t.digits);
 				count++;
-			y.digits = reverseList(y.digits);
+			//y.digits = reverseList(y.digits);
 			}
-			y.digits = reverseList(y.digits);
-			t.digits = reverseList(t.digits);
-			pushBack(res.digits, count);
+			//y.digits = reverseList(y.digits);
+			//t.digits = reverseList(t.digits);
+			pushFront(&(res.digits->head), count);
 			res.digits->len++;
 		}
 		curr1 = curr1->next;
