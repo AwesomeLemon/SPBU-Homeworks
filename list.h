@@ -2,6 +2,7 @@
 		by Alexander Chebykin
 */
 #define vtype int
+#define MAX_INT_LEN 10
 typedef struct node {
 	vtype val;
 	struct node* next;
@@ -12,13 +13,13 @@ typedef struct list {
 	int len;
 } list;
 
-node* getNewNode(vtype);
+void getNewNode(vtype, node**);
 void printList(list*);
-int removeValue(list*, vtype);
+void removeValue(list*, vtype);
 void pushFront (node **, vtype);
 void pushBack(list*, vtype);
 void pop(list*);
 void clearExit(list*);
-list* getNewList(void);
-list* reverseList(list*);
-void calculate(list*);
+void getNewList(list**);
+void reverseList(list**);
+void removeAfter(node**);

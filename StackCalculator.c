@@ -1,31 +1,32 @@
 /* Main file for stack calculator for integers
 		by Alexander Chebykin
 */
-#define _CRTDBG_MAP_ALLOC
+//#define _CRTDBG_MAP_ALLOC
 #include <stdlib.h>
-#include <crtdbg.h>
+//#include <crtdbg.h>
 #include <stdio.h>
-#include "list.h"
-
+#include "stack.h"
 int main() {
-    list* list1 = getNewList();
+    stack* stack1;
     char c;
     vtype val;
     int flag=1;
+	stack_get_new(&stack1);
     while (flag) {
         scanf("%c",&c);
         switch (c) {
                case 'q':
-					clearExit(list1);
+					stack_clear_exit(stack1);
                     flag = 0;
 					break;
 			   case 'c':
-				   calculate(list1);
-				   printList(list1);
-				   pop(list1);
+				   stack_calculate(stack1);
+				   val = stack1->head->val;
+				   printf("%d\n", val);
+				   stack_pop(stack1);
+				   break;
 		}
     }
-	free(list1);
-	_CrtDumpMemoryLeaks();
+	//_CrtDumpMemoryLeaks();
 	return 0;
 }
