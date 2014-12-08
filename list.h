@@ -12,12 +12,13 @@ typedef struct list {
 	int len;
 } list;
 
-node* getNewNode(vtype);
+void getNewNode(vtype, node**);
 void printList(list*);
 int removeValue(list*, vtype);
 void pushFront (node **, vtype);
 void pushBack(list*, vtype);
 void pop(list*);
 void clearExit(list*);
-list* getNewList(void);
-list* reverseList(list*);
+void getNewList(list**);
+void reverseList(list**);
+void removeAfter(node**);

@@ -6,41 +6,33 @@
 #include "longMath.h"
 
 int main() {
-	longNum* x = (longNum*) malloc(sizeof(longNum));
-	longNum* y = (longNum*) malloc(sizeof(longNum));
-	longNum z;
-	int i;
+	longNum* x;
+	longNum* y;
+	longNum* z;
 	char sign;
-	x->digits = getNewList();
-	y->digits = getNewList();
-	x->digits->len = 0;
-	y->digits->len = 0;
-	x = longNum_scan();
-	y = longNum_scan();
+	longNum_scan(&x);
+	longNum_scan(&y);
+	z = (longNum*) malloc(sizeof(longNum));
+	getNewList(&(z->digits));
 	printf("Enter an operation you require\n");
 	scanf("%c", &sign);
 	switch (sign) {
 		case '+':
-			z = longNum_add(*x, *y);
+			longNum_add(*x, *y, &z);
 			break;
 		case '-':
-			z = longNum_sub(*x, *y);
+			longNum_sub(*x, *y, &z);
 			break;
 		case '*':
-			z = longNum_mul(*x, *y);
+			longNum_mul(*x, *y, &z);
 			break;
 		case '/':
-			z = longNum_div(*x, *y);
+			longNum_div(*x, *y, &z);
 	}
-	printLongNum(z);
-	clearExit(x->digits);
-	clearExit(y->digits);
-	free(x->digits);
-	free(y->digits);
-	free(x);
-	free(y);
-	clearExit(z.digits);
-	free(z.digits);
+	printLongNum(*z);
+	longNum_exit(x);
+	longNum_exit(y);
+	longNum_exit(z);
 	_CrtDumpMemoryLeaks();
 	return 0;
 }

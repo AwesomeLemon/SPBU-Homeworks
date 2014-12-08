@@ -11,12 +11,13 @@ typedef struct longNum {
 	list* digits;
 } longNum;
 
-longNum longNum_add(longNum, longNum);
-longNum longNum_sub(longNum, longNum);
-longNum longNum_mul(longNum, longNum);
-longNum longNum_div(longNum, longNum);
+void longNum_add(longNum, longNum, longNum**);
+void longNum_sub(longNum, longNum, longNum**);
+void longNum_mul(longNum, longNum, longNum**);
+void longNum_div(longNum, longNum, longNum**);
 longNum longNum_neg(longNum);
 void printLongNum(longNum);
 int isLonger(longNum*, longNum*);
 int isBigger(longNum, longNum);
-longNum* longNum_scan(void);
+void longNum_scan(longNum**);
+void longNum_exit(longNum*);
