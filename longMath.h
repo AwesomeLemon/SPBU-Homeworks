@@ -20,4 +20,5 @@ void printLongNum(longNum);
 int isLonger(longNum*, longNum*);
 int isBigger(longNum, longNum);
 void longNum_scan(longNum**);
+char longNum_scan_no_sign(longNum**);
 void longNum_exit(longNum*);

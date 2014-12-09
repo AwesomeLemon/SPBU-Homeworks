@@ -441,3 +441,17 @@ void longNum_exit(longNum* x) {
 	clearExit(x->digits);
 	free(x);
 }
+
+char longNum_scan_no_sign(longNum** x) {
+	char c;
+	*x = (longNum*) malloc(sizeof(longNum));
+	getNewList(&((*x)->digits));
+	(*x)->digits->len = 0;
+	scanf("%c", &c);
+	while ((c <= '9') && (c >= '0')) {
+		(*x)->digits->len++;
+		pushFront(&((*x)->digits->head), atoi(&c));
+		scanf("%c",&c);
+	}
+	return c;// so we'll not lose last scanned symbol
+}

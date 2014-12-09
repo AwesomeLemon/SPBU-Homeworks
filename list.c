@@ -32,12 +32,12 @@ void printList(list* list1) {
 	else printf("The list is empty.");
 }
 
-int removeValue(list* list1, vtype val) {
+void removeValue(list* list1, vtype val) {
 	if (list1->head) {
 		node* curr = list1->head;
 		if (curr->val == val) {
 				pop(list1);
-				return 1;
+				return;
 		}
 		else { 
 			while (curr->next) {
@@ -48,16 +48,16 @@ int removeValue(list* list1, vtype val) {
 					   free(curr->next);
 					   curr->next = t;
 					   list1->len--;
-					   return 1;
+					   return;
 				  }
 			}
 			printf("Such an element doesn't exist!");
-			return 0;
+			return;
 		}
 	}
 	else {
 		printf("You're trying to break my program! The list is empty!\n");
-		return 0;
+		return;
 	}
 }
 /*void insert(node* el, vtype val) {
