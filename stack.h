@@ -7,3 +7,4 @@
 #define stack_push pushFront
 #define stack_clear_exit clearExit
 void stack_calculate(stack*);
+void stack_true_calculte(stack*, char);
