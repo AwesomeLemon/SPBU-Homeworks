@@ -1,12 +1,10 @@
 /* File with mathematical operations for long numbers
           by Alexander Chebykin
 */
-#define _CRTDBG_MAP_ALLOC
 #include <stdlib.h>
-#include <crtdbg.h>
 #include "longMath.h"
 #include <stdio.h>
-#include <math.h>
+
 longNum longNum_neg(longNum x) {
 	x.sign = 1 - x.sign;
 	return x;
@@ -24,7 +22,7 @@ void longNum_add(longNum x, longNum y, longNum** z) {
 	curr1 = x.digits->head;
 	curr2 = y.digits->head;
 	if(((*z)->digits->len)) {
-		// If len != 0 then we are probably trying to write (x+y) into (x). That's why we are cleaning it after calculations are done.
+		// If len != 0 then we are probably trying to write (x+y) into (x). That's why we are cleaning it AFTER calculations are done.
 		flag = 1;
 	}
 	if (x.sign == y.sign) {
@@ -60,7 +58,7 @@ void longNum_add(longNum x, longNum y, longNum** z) {
 			pushFront(&((*z)->digits->head), overflow);
 			(*z)->digits->len++;
 		}
-		if (flag) {
+		if (flag) {// At this poit flag is either 0 or 2
 			while (del->next) {
 				removeAfter(&del);
 				(*z)->digits->len--;
@@ -146,10 +144,7 @@ void longNum_add(longNum x, longNum y, longNum** z) {
 		}
 		if (flag) {
 			while (del->next) {
-				node* temp = del->next->next;
-				free(del->next);
-				del->next = temp;
-				//removeAfter(&del);
+				removeAfter(&del);
 				(*z)->digits->len--;
 			}
 		}
@@ -165,7 +160,6 @@ void printLongNum(longNum x) {
 		reverseList(&(x.digits));
 		curr = x.digits->head;
 		while (curr) {
-			//printf("%f ",curr->val);
 			if (!(flag && !(curr->val))) {
 				printf("%d",curr->val);
 				flag = 0;
@@ -184,29 +178,29 @@ int isLonger(longNum* x,longNum* y) {//SIGNS ARE NOT CONSIDERED!!!
 		node* curr2;
 		if (x->digits->len > y->digits->len) bigger = 1;
 		else if (y->digits->len > x->digits->len) bigger = 0;
-		else {
-			reverseList(&(x->digits));
-			reverseList(&(y->digits));
-			curr1 = x->digits->head;
-			curr2 = y->digits->head;
-			while (curr1 && curr2) {
-				if (curr1->val < curr2->val) {
-					bigger=0;
-					break;
-				}
-				else 
-					if (curr1->val > curr2->val) {
-						bigger=1;
+			else {
+				reverseList(&(x->digits));
+				reverseList(&(y->digits));
+				curr1 = x->digits->head;
+				curr2 = y->digits->head;
+				while (curr1 && curr2) {
+					if (curr1->val < curr2->val) {
+						bigger=0;
 						break;
 					}
-					else {
-						curr1 = curr1->next;
-						curr2 = curr2->next;
-					}
+					else 
+						if (curr1->val > curr2->val) {
+							bigger=1;
+							break;
+						}
+						else {
+							curr1 = curr1->next;
+							curr2 = curr2->next;
+						}
+				}
+				reverseList(&(x->digits));
+				reverseList(&(y->digits));
 			}
-			reverseList(&(x->digits));
-			reverseList(&(y->digits));
-		}
 		return bigger;
 }
 
@@ -321,7 +315,7 @@ void longNum_mul(longNum x, longNum y, longNum** res) {
 	}
 	(*res)->sign = tempsign;
 }
-//Big-endian
+
 /*int isBigger(longNum x,longNum y) {
 		int bigger = 2; //For equal numbers. To avoid final answer of '-0' in addition and subtraction
 		reverseList(&(x.digits));
@@ -375,6 +369,7 @@ void longNum_div(longNum x, longNum y, longNum** z) {
 	if (!isLonger(&x,&y)) {
 		pushBack((*z)->digits, 0);
 		(*z)->digits->len++;
+		longNum_exit(t);
 		return;
 	}
 	if (x.sign == y.sign) {
@@ -433,7 +428,7 @@ void longNum_div(longNum x, longNum y, longNum** z) {
 	//
 	//longNum* test = (longNum*) malloc(sizeof(longNum));
 	//if (z+1)*y < x togda dobvlyam 0 k z;
-
+	(*z)->sign = tempsign;
 	longNum_exit(t);
 }
 

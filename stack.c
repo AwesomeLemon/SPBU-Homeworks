@@ -1,3 +1,6 @@
+/* File with functions for stack calculator
+		by Alexander Chebykin
+*/
 #include "stack.h"
 
 void stack_calculate(stack* stack1) {
@@ -5,6 +8,7 @@ void stack_calculate(stack* stack1) {
 	char temp2 = ' ';
 	int a,b;
 	while ((temp != '=') && (temp2 != '=')) {
+		temp2 = ' ';
 		scanf("%c",&temp);
 		if (temp == ' ') continue;
 		if ((temp <= '9') && (temp >= '0')) {
@@ -20,20 +24,22 @@ void stack_calculate(stack* stack1) {
 			free(x);
 		}
 		else {
-			scanf("%c", &temp2);
-			if ((temp2 <= '9') && (temp2 >= '0') && (temp == '-')) {
-				char c;
-				longNum* x;
-				temp = temp2;
-				temp2 = ' ';
-				c = longNum_scan_no_sign(&x);
-				x->sign = 1;
-				pushBack(x->digits, temp - '0');
-				x->digits->len++;
-				stack_push(&(stack1->head), *x);
-				stack1->len++;
-				temp = c;
-				free(x);
+			if (temp == '-') {
+				scanf("%c", &temp2);
+				if ((temp2 <= '9') && (temp2 >= '0') && (temp == '-')) {
+					char c;
+					longNum* x;
+					temp = temp2;
+					temp2 = ' ';
+					c = longNum_scan_no_sign(&x);
+					x->sign = 1;
+					pushBack(x->digits, temp - '0');
+					x->digits->len++;
+					stack_push(&(stack1->head), *x);
+					stack1->len++;
+					temp = c;
+					free(x);
+				}
 			}
 		}
 		stack_true_calculte(stack1, temp);
@@ -51,7 +57,7 @@ void stack_true_calculte(stack* stack1, char sign) {
 			break;
 		case '-':
 			t = &(stack1->head->next->val);
-			longNum_sub(stack1->head->val, stack1->head->next->val, &t);
+			longNum_sub(stack1->head->next->val, stack1->head->val, &t);
 			stack_pop(stack1);
 			break;
 		case '*':
@@ -80,5 +86,4 @@ void stack_true_calculte(stack* stack1, char sign) {
 				free(t);
 			}
 	}
-	//longNum_exit(t);
 }

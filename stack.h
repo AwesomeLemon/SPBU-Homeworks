@@ -1,3 +1,6 @@
+/* Header file with functions for stack calculator
+		by Alexander Chebykin
+*/
 #include "longNumList.h"
 #include <stdlib.h>
 #include <stdio.h>

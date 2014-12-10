@@ -23,7 +23,6 @@ void printList(list* list1) {
 		node* curr;
 		curr = list1->head;
 		while (curr) {
-			//printf("%f ",curr->val);
 			printf("%d ",curr->val);
 			curr = curr->next;
 		}
@@ -91,16 +90,10 @@ void pushBack(list* list1, vtype val) {
 
 void pop(list* list1) {
 	if (list1->head) {
-		//if (list1->head->next) {
 			node* t = list1->head->next;
 			free(list1->head);
 			list1->head = t;
 			list1->len--;
-	//	}
-	//	else {
-	//		free(list1->head);
-	//		list1->len--;
-	//	}
 	}
 }
 void clearExit(list* list1) {
@@ -120,8 +113,6 @@ void getNewList(list** list1) {
 void reverseList(list** list1) {
 	int i;
 	node* curr = (*list1)->head;
-	//list* reverse;
-	//getNewList(&reverse);
 	int len = (*list1)->len;
 	for (i=0; i < len-1; i++) {
 		node* temp = curr->next->next;
@@ -129,7 +120,6 @@ void reverseList(list** list1) {
 		free(curr->next);
 		curr->next = temp;
 	}
-	//reverse->len = list1->len;
 }
 
 void removeAfter(node** del) {

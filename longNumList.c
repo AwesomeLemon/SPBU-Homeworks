@@ -1,4 +1,4 @@
-/* File with functions for singly linked list
+/* File with functions for singly linked list of long numbers
 		by Alexander Chebykin
 */
 #define _CRTDBG_MAP_ALLOC
@@ -27,20 +27,10 @@ void pushFrontLong(nodeLong **head, valtype val) {
 
 void popLong(listLong* list1) {
 	if (list1->head) {
-		//if (list1->head->next) {
-
 			nodeLong* t = list1->head->next;
-		//	clearExit(list1->head->val.digits);
-			
-
 			longNum_exit(&list1->head->val);
 			list1->head = t;
 			list1->len--;
-	//	}
-	//	else {
-	//		free(list1->head);
-	//		list1->len--;
-	//	}
 	}
 }
 void clearExitLong(listLong* list1) {

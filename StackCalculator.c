@@ -1,13 +1,9 @@
-/* Main file for stack calculator for integers
+/* Main file for stack calculator for long numbers
 		by Alexander Chebykin
 */
-//#define _CRTDBG_MAP_ALLOC
 #include <stdlib.h>
-//#include <crtdbg.h>
 #include <stdio.h>
 #include "stack.h"
-//#include "longMath.h"
-//#include "longNumList.h"
 
 int main() {
     stack* stack1;
@@ -28,6 +24,5 @@ int main() {
 				   break;
 		}
     }
-	//_CrtDumpMemoryLeaks();
 	return 0;
 }
