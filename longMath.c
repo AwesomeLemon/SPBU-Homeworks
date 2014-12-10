@@ -358,20 +358,18 @@ void longNum_mul(longNum x, longNum y, longNum** res) {
 */
 void longNum_div(longNum x, longNum y, longNum** z) {
 	int tempsign;
-	longNum res;
 	longNum* t = (longNum*) malloc(sizeof(longNum));
 	node* curr1;
 	node* curr2;
 	int flag = 0;
 	(*z)->sign = 0;
 	t->sign = 0;
-	getNewList(&(t->digits));
 	if (!isLonger(&x,&y)) {
 		pushBack((*z)->digits, 0);
 		(*z)->digits->len++;
-		longNum_exit(t);
 		return;
 	}
+	getNewList(&(t->digits));
 	if (x.sign == y.sign) {
 		tempsign = 0;
 		x.sign = 0;
@@ -424,10 +422,6 @@ void longNum_div(longNum x, longNum y, longNum** z) {
 		}
 		curr1 = curr1->next;
 	}
-
-	//
-	//longNum* test = (longNum*) malloc(sizeof(longNum));
-	//if (z+1)*y < x togda dobvlyam 0 k z;
 	(*z)->sign = tempsign;
 	longNum_exit(t);
 }

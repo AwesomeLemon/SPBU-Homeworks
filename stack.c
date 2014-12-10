@@ -6,7 +6,6 @@
 void stack_calculate(stack* stack1) {
 	char temp = ' ';
 	char temp2 = ' ';
-	int a,b;
 	while ((temp != '=') && (temp2 != '=')) {
 		temp2 = ' ';
 		scanf("%c",&temp);
@@ -73,7 +72,7 @@ void stack_true_calculte(stack* stack1, char sign) {
 		case '/':
 			if (!stack1->head->val.digits->head->val) {
 				printf("DIVISION BY ZERO");
-				stack_pop(stack1);
+				exit(0);
 			}
 			else {
 				t = (longNum*) malloc(sizeof(longNum));
