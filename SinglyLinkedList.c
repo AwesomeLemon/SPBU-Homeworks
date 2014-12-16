@@ -1,4 +1,4 @@
-/* Main file for one-way list
+/* Main file for singly linked list
 		by Alexander Chebykin
 */
 #include <stdio.h>
@@ -6,10 +6,11 @@
 #include "list.h"
 
 int main() {
-    list* list1 = getNewList();
+    list* list1;
     char c;
     float val;
     int flag=1;
+	getNewList(&list1);
     while (flag) {
         scanf("%c",&c);
         switch (c) {
