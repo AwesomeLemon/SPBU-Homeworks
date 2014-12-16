@@ -3,50 +3,24 @@
 */
 #include "stack.h"
 
-void stack_calculate(stack* stack1) {
+void stack_start_to_calculate(stack* stack1) {
 	char temp = ' ';
 	char temp2 = ' ';
+	char* address; // We only need it because C doesn't allow to take address of address in one operation (I, at least, cannot do &&(char) but I want to have char**)
 	while ((temp != '=') && (temp2 != '=')) {
 		temp2 = ' ';
-		scanf("%c",&temp);
-		if (temp == ' ') continue;
-		if ((temp <= '9') && (temp >= '0')) {
-			char c;
-			longNum* x;
-			c = longNum_scan_no_sign(&x);
-			x->sign = 0;
-			pushBack(x->digits, temp - '0');
-			x->digits->len++;
-			stack_push(&(stack1->head), *x);
-			stack1->len++;
-			temp = c;
-			free(x);
+		address = &temp2;
+		temp = stack_scan_for_calc(stack1, &address);// there's nothing before temp, so we give address of a ' '
+		if (temp == '-') {
+			address = &temp;
+			temp2 = stack_scan_for_calc(stack1, &address);
 		}
-		else {
-			if (temp == '-') {
-				scanf("%c", &temp2);
-				if ((temp2 <= '9') && (temp2 >= '0') && (temp == '-')) {
-					char c;
-					longNum* x;
-					temp = temp2;
-					temp2 = ' ';
-					c = longNum_scan_no_sign(&x);
-					x->sign = 1;
-					pushBack(x->digits, temp - '0');
-					x->digits->len++;
-					stack_push(&(stack1->head), *x);
-					stack1->len++;
-					temp = c;
-					free(x);
-				}
-			}
-		}
-		stack_true_calculte(stack1, temp);
-		stack_true_calculte(stack1, temp2);
+		stack_calculate(stack1, temp);
+		stack_calculate(stack1, temp2);
 	}
 }
 
-void stack_true_calculte(stack* stack1, char sign) {
+void stack_calculate(stack* stack1, char sign) {
 	longNum* t;
 	switch (sign) {
 		case '+':
@@ -61,6 +35,10 @@ void stack_true_calculte(stack* stack1, char sign) {
 			break;
 		case '*':
 			t = (longNum*) malloc(sizeof(longNum));
+			if (!t) {
+				printf("Error: Memory cannot be allocated. Exiting.");
+				exit(0);
+			}
 			getNewList(&t->digits);
 			longNum_mul(stack1->head->val, stack1->head->next->val, &t);
 			stack_pop(stack1);
@@ -70,12 +48,20 @@ void stack_true_calculte(stack* stack1, char sign) {
 			free(t);
 			break;
 		case '/':
+			//Here we check if stack1->head->val == 0
+			reverseList(&(stack1->head->val.digits));
 			if (!stack1->head->val.digits->head->val) {
 				printf("DIVISION BY ZERO");
 				exit(0);
 			}
+			
 			else {
+				reverseList(&(stack1->head->val.digits));
 				t = (longNum*) malloc(sizeof(longNum));
+				if (!t) {
+					printf("Error: Memory cannot be allocated. Exiting.");
+					exit(0);
+				}
 				getNewList(&t->digits);
 				longNum_div(stack1->head->next->val, stack1->head->val, &t);
 				stack_pop(stack1);
@@ -85,4 +71,24 @@ void stack_true_calculte(stack* stack1, char sign) {
 				free(t);
 			}
 	}
+}
+
+char stack_scan_for_calc(stack* stack1, char **previous) {
+	char temp;
+	scanf("%c",&temp);
+	if ((temp <= '9') && (temp >= '0')) {
+		longNum* x;
+		longNum_scan_no_sign(&x);
+		x->sign = 0;
+		if (**previous == '-') {//if after '-' goes number, it means that number is negative and '-' should not be considered mathematical operation
+			x->sign = 1;
+			**previous = ' ';
+		}
+		pushBack(x->digits, temp - '0');
+		x->digits->len++;
+		stack_push(&(stack1->head), *x);
+		stack1->len++;
+		free(x);
+	}
+	return temp;
 }

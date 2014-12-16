@@ -1,6 +1,8 @@
 /* Header file with functions for singly linked list
 		by Alexander Chebykin
 */
+#include <stdlib.h>
+#include <stdio.h>
 #define vtype int
 #define MAX_INT_LEN 10
 typedef struct node {

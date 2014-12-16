@@ -1,8 +1,6 @@
 /* Main file for stack calculator for long numbers
 		by Alexander Chebykin
 */
-#include <stdlib.h>
-#include <stdio.h>
 #include "stack.h"
 
 int main() {
@@ -18,7 +16,7 @@ int main() {
                     flag = 0;
 					break;
 			   case 'c':
-				   stack_calculate(stack1);
+				   stack_start_to_calculate(stack1);
 				   printLongNum(stack1->head->val);
 				   stack_pop(stack1);
 				   break;

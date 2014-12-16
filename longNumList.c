@@ -1,11 +1,7 @@
 /* File with functions for singly linked list of long numbers
 		by Alexander Chebykin
 */
-#define _CRTDBG_MAP_ALLOC
-#include <stdlib.h>
-#include <crtdbg.h>
 #include "longNumList.h"
-#include <stdio.h>
 void getNewNodeLong(valtype val, nodeLong** out) {
 	*out = (nodeLong*) malloc(sizeof(nodeLong));
 	if (*out) {
@@ -43,6 +39,10 @@ void clearExitLong(listLong* list1) {
 
 void getNewListLong(listLong** list1) {
 	*list1 = (listLong*) malloc(sizeof(list));
+	if (!list1) {
+		printf("Error: Memory cannot be allocated. Exiting.");
+		exit(0);
+	}
 	(*list1)->head = 0;
 	(*list1)->len = 0;
 }

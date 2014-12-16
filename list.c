@@ -1,11 +1,7 @@
 /* File with functions for singly linked list
 		by Alexander Chebykin
 */
-#define _CRTDBG_MAP_ALLOC
-#include <stdlib.h>
-#include <crtdbg.h>
 #include "list.h"
-#include <stdio.h>
 void getNewNode(vtype val, node** out) {
 	*out = (node*) malloc(sizeof(node));
 	if (*out) {
@@ -59,13 +55,6 @@ void removeValue(list* list1, vtype val) {
 		return;
 	}
 }
-/*void insert(node* el, vtype val) {
-		node* newNode = getNewNode(val);
-		if (newNode) {
-			newNode->next=el->next;
-			el->next = newNode;
-		}
-}*/
 
 void pushFront (node **head, vtype val) {
     node *tmp;
@@ -106,6 +95,10 @@ void clearExit(list* list1) {
 
 void getNewList(list** list1) {
 	*list1 = (list*) malloc(sizeof(list));
+	if (!list1) {
+		printf("Error: Memory cannot be allocated. Exiting.");
+		exit(0);
+	}
 	(*list1)->head = 0;
 	(*list1)->len = 0;
 }

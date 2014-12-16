@@ -1,10 +1,13 @@
 /* File with mathematical operations for long numbers
           by Alexander Chebykin
 */
-#include <stdlib.h>
+//P.S. There are A LOT of list reversions. It is so so that every function would take and give "little-endian" long numbers (in head of the list lies the most low-oreder digit)
+//			e.g. if long Num==123 then list looks like 3->2->1
 #include "longMath.h"
-#include <stdio.h>
-
+#define SUM_VARIABLE_NOT_EMPTY 1
+#define SUM_VARIABLE_EMPTY 0
+#define GARBAGE_BEGINNING_SAVED 2
+#define LONG_NUM_EQUAL 2
 longNum longNum_neg(longNum x) {
 	x.sign = 1 - x.sign;
 	return x;
@@ -17,17 +20,17 @@ void longNum_sub(longNum x, longNum y, longNum** z) {
 void longNum_add(longNum x, longNum y, longNum** z) {
 	node* curr1;
 	node* curr2;
-	int flag = 0;
+	int flag = SUM_VARIABLE_EMPTY;
 	node* del;
 	curr1 = x.digits->head;
 	curr2 = y.digits->head;
 	if(((*z)->digits->len)) {
 		// If len != 0 then we are probably trying to write (x+y) into (x). That's why we are cleaning it AFTER calculations are done.
-		flag = 1;
+		flag = SUM_VARIABLE_NOT_EMPTY;
 	}
 	if (x.sign == y.sign) {
-		node* del = curr1;
 		int overflow = 0;
+		del = curr1;
 		(*z)->sign = x.sign;
 		while (curr1 && curr2) {
 			int temp;
@@ -35,9 +38,9 @@ void longNum_add(longNum x, longNum y, longNum** z) {
 			pushFront(&((*z)->digits->head), temp % 10);
 			(*z)->digits->len++;
 			overflow = temp / 10;
-			if (flag == 1) {
+			if (flag == SUM_VARIABLE_NOT_EMPTY) {
 				del = (*z)->digits->head;
-				flag = 2;
+				flag = GARBAGE_BEGINNING_SAVED;
 			}
 			curr1 = curr1->next;
 			curr2 = curr2->next;
@@ -58,16 +61,10 @@ void longNum_add(longNum x, longNum y, longNum** z) {
 			pushFront(&((*z)->digits->head), overflow);
 			(*z)->digits->len++;
 		}
-		if (flag) {// At this poit flag is either 0 or 2
-			while (del->next) {
-				removeAfter(&del);
-				(*z)->digits->len--;
-			}
-		}
 	}
 	else {
 		int bigger = isLonger(&x, &y);
-		if (bigger == 2) { //For equal numbers. To avoid final answer of '-0'
+		if (bigger == LONG_NUM_EQUAL) { //For equal numbers. To avoid final answer of '-0'
 			(*z)->sign = 0;
 			pushFront(&((*z)->digits->head), 0);
 			(*z)->digits->len++;
@@ -94,9 +91,9 @@ void longNum_add(longNum x, longNum y, longNum** z) {
 						}
 						pushFront(&((*z)->digits->head), temp);
 						(*z)->digits->len++;
-						if (flag == 1) {
+						if (flag == SUM_VARIABLE_NOT_EMPTY) {
 							del = (*z)->digits->head;
-							flag = 2;
+							flag = GARBAGE_BEGINNING_SAVED;
 						}
 						curr1 = curr1->next;
 						curr2 = curr2->next;
@@ -128,25 +125,32 @@ void longNum_add(longNum x, longNum y, longNum** z) {
 						}
 						pushFront(&((*z)->digits->head),temp);
 						(*z)->digits->len++;
-						if (flag == 1) {
+						if (flag == SUM_VARIABLE_NOT_EMPTY) {
 							del = (*z)->digits->head;
-							flag = 2;
+							flag = GARBAGE_BEGINNING_SAVED;
 						}
 						curr1 = curr1->next;
 						curr2 = curr2->next;
 				}
 				while (curr2) {
-					pushFront(&((*z)->digits->head), curr2->val);
-					(*z)->digits->len++;
+					if (curr2->val >= 0) {
+						pushFront(&((*z)->digits->head), curr2->val);
+						(*z)->digits->len++;
+					}
+					else {
+						pushFront(&((*z)->digits->head), curr2->val + 10);
+						(*z)->digits->len++;
+						curr2->next->val--;
+					}
 					curr2 = curr2->next;
 				}
 			}
 		}
-		if (flag) {
-			while (del->next) {
-				removeAfter(&del);
-				(*z)->digits->len--;
-			}
+	}
+	if (flag == GARBAGE_BEGINNING_SAVED) {
+		while (del->next) {
+			removeAfter(&del);
+			(*z)->digits->len--;
 		}
 	}	
 	reverseList(&((*z)->digits));
@@ -173,11 +177,12 @@ void printLongNum(longNum x) {
 }
 
 int isLonger(longNum* x,longNum* y) {//SIGNS ARE NOT CONSIDERED!!!
-		int bigger = 2; //For equal numbers. To avoid final answer of '-0' in addition and subtraction
+		int bigger = LONG_NUM_EQUAL; //For equal numbers. To avoid final answer of '-0' in addition and subtraction
 		node* curr1;
 		node* curr2;
 		if (x->digits->len > y->digits->len) bigger = 1;
-		else if (y->digits->len > x->digits->len) bigger = 0;
+		else {
+			if (y->digits->len > x->digits->len) bigger = 0;
 			else {
 				reverseList(&(x->digits));
 				reverseList(&(y->digits));
@@ -201,12 +206,17 @@ int isLonger(longNum* x,longNum* y) {//SIGNS ARE NOT CONSIDERED!!!
 				reverseList(&(x->digits));
 				reverseList(&(y->digits));
 			}
+		}
 		return bigger;
 }
 
 void longNum_scan(longNum** x) {
 	char c;
 	*x = (longNum*) malloc(sizeof(longNum));
+	if (!x) {
+		printf("Error: Memory cannot be allocated. Exiting.");
+		exit(0);
+	}
 	getNewList(&((*x)->digits));
 	(*x)->digits->len = 0;
 	printf("Enter a number\n");
@@ -233,153 +243,59 @@ void longNum_mul(longNum x, longNum y, longNum** res) {
 	(*res)->sign = 0;
 	if (x.sign == y.sign) {
 		tempsign = 0;
-		x.sign = 0;
-		y.sign = 0;
 	}
 	else {
 		tempsign = 1;
-		x.sign = 0;
-		y.sign = 0;
 	}
+	x.sign = 0;
+	y.sign = 0;
+
 	if(isLonger(&x,&y)) {
-		int i = 0;
-		int j;
-		int len = y.digits->len;
-		curr1 = x.digits->head;
-		curr2 = y.digits->head;
-		for (i; i < len; i++) {
-			longNum t;
-			int curMul = y.digits->head->val;
-			getNewList(&(t.digits));
-			t.sign = 0;
-			t.digits->len = 0;
-			while (curr1) {
-				int temp;
-				temp = curr1->val * curMul + overflow;
-				pushFront(&(t.digits->head), temp % 10);
-				t.digits->len++;
-				overflow = temp / 10;
-				curr1 = curr1->next;
-			}
-			if (overflow) {
-				pushFront(&(t.digits->head), overflow);
-				t.digits->len++;
-			}
-			for (j = i; j > 0; j--) {
-				pushBack(t.digits, 0);
-				t.digits->len++;
-			}
-			reverseList(&(t.digits));
-			longNum_add(**res, t, res);
-			pop(y.digits);
-			clearExit(t.digits);
-			curr1 = x.digits->head;
-			overflow = 0;
-		}
+		longNum_mul_kernel(x,y,res);
 	}
 	else {
-		int i = 0;
-		int j;
-		int len = x.digits->len;
-		curr1 = x.digits->head;
-		curr2 = y.digits->head;
-		for (i; i < len; i++) {
-			longNum t;
-			int curMul = x.digits->head->val;
-			getNewList(&(t.digits));
-			t.sign = 0;
-			t.digits->len = 0;
-			while (curr2) {
-				int temp;
-				temp = curr2->val * curMul + overflow;
-				pushFront(&(t.digits->head), temp % 10);
-				t.digits->len++;
-				overflow = temp / 10;
-				curr2 = curr2->next;
-			}
-			if (overflow) {
-				pushFront(&(t.digits->head), overflow);
-				t.digits->len++;
-			}
-			for (j = i; j > 0; j--) {
-				pushBack(t.digits, 0);
-				t.digits->len++;
-			}
-			reverseList(&(t.digits));
-			longNum_add(**res, t, res);
-			pop(x.digits);
-			clearExit(t.digits);
-			curr2 = y.digits->head;
-			overflow = 0;
-		}
+		longNum_mul_kernel(y, x, res);
 	}
 	(*res)->sign = tempsign;
 }
 
-/*int isBigger(longNum x,longNum y) {
-		int bigger = 2; //For equal numbers. To avoid final answer of '-0' in addition and subtraction
-		reverseList(&(x.digits));
-		reverseList(&(y.digits));
-		if (!(x.sign || y.sign)) { //both are positive
-			node* curr1 = x.digits->head;
-			node* curr2 = y.digits->head;
-			if (x.digits->len > y.digits->len) bigger = 1;
-			else if (y.digits->len > x.digits->len) bigger = 0;
-			else {
-				while (curr1 && curr2) {
-					if (curr1->val < curr2->val) {
-						bigger=0;
-						break;
-					}
-					else 
-						if (curr1->val > curr2->val) {
-							bigger=1;
-							break;
-						}
-						else {
-							curr1 = curr1->next;
-							curr2 = curr2->next;
-						}
-				}
-			}
-		}
-		else {
-			if(!x.sign && y.sign) bigger = 1;
-			else 
-				if (x.sign && !y.sign) bigger = 0;
-				else {
-					x.sign = 0;
-					y.sign = 0;
-					bigger = 1 - isBigger(x,y);
-				}
-		}
-		return bigger;
-}
-*/
 void longNum_div(longNum x, longNum y, longNum** z) {
 	int tempsign;
+	int flag_lead_zeroes = 0;
 	longNum* t = (longNum*) malloc(sizeof(longNum));
 	node* curr1;
 	node* curr2;
-	int flag = 0;
+	int flag_sign = 0;
+	if (!t) {
+		printf("Error: Memory cannot be allocated. Exiting.");
+		exit(0);
+	}
 	(*z)->sign = 0;
 	t->sign = 0;
 	if (!isLonger(&x,&y)) {
-		pushBack((*z)->digits, 0);
+		if (x.sign && !y.sign) {
+			pushBack((*z)->digits, 1);
+			(*z)->sign = 1;
+		}
+		else {
+			pushBack((*z)->digits, 0);
+		}
 		(*z)->digits->len++;
 		return;
 	}
 	getNewList(&(t->digits));
 	if (x.sign == y.sign) {
 		tempsign = 0;
-		x.sign = 0;
-		y.sign = 0;
 	}
 	else {
+		if (x.sign && !y.sign) {
+			flag_sign = 1;
+		}
 		tempsign = 1;
-		x.sign = 0;
-		y.sign = 0;
 	}
+	x.sign = 0;
+	y.sign = 0;
+
 	reverseList(&(x.digits));
 
 	//check if y == 0
@@ -401,7 +317,7 @@ void longNum_div(longNum x, longNum y, longNum** z) {
 		t->digits->len++;
 		if (isLonger(t,&y)) {
 			int count = 0;
-			flag = 1;
+			flag_lead_zeroes = 1;
 			while (isLonger(t,&y)) {
 				longNum_sub(*t, y, &t);
 				reverseList(&(t->digits));
@@ -415,12 +331,22 @@ void longNum_div(longNum x, longNum y, longNum** z) {
 			(*z)->digits->len++;
 		}
 		else {
-			if (flag) {
+			if (flag_lead_zeroes) {
 				pushFront(&((*z)->digits->head), 0);
 				(*z)->digits->len++;
 			}
 		}
 		curr1 = curr1->next;
+	}
+	
+	//for mathematically right division (e.g. -9 / 4 should equal -3, not -2)
+	if (flag_sign) {
+		longNum* one = (longNum*) malloc(sizeof(longNum));
+		getNewList(&one->digits);
+		one->sign = 0;
+		pushBack(one->digits, 1);
+		longNum_add(**z, *one, z);
+		longNum_exit(one);
 	}
 	(*z)->sign = tempsign;
 	longNum_exit(t);
@@ -431,9 +357,13 @@ void longNum_exit(longNum* x) {
 	free(x);
 }
 
-char longNum_scan_no_sign(longNum** x) {
+void longNum_scan_no_sign(longNum** x) {
 	char c;
 	*x = (longNum*) malloc(sizeof(longNum));
+	if (!x) {
+		printf("Error: Memory cannot be allocated. Exiting.");
+		exit(0);
+	}
 	getNewList(&((*x)->digits));
 	(*x)->digits->len = 0;
 	scanf("%c", &c);
@@ -442,5 +372,43 @@ char longNum_scan_no_sign(longNum** x) {
 		pushFront(&((*x)->digits->head), atoi(&c));
 		scanf("%c",&c);
 	}
-	return c;// so we'll not lose last scanned symbol
+	ungetc((int) c, stdin);
+}
+
+void longNum_mul_kernel(longNum x, longNum y, longNum** res) {
+	int i = 0;
+	int j;
+	int len = y.digits->len;
+	node* curr1 = x.digits->head;
+	node* curr2 = y.digits->head;
+	int overflow = 0;
+	for (i; i < len; i++) {
+		longNum t;
+		int curMul = y.digits->head->val;
+		getNewList(&(t.digits));
+		t.sign = 0;
+		t.digits->len = 0;
+		while (curr1) {
+			int temp;
+			temp = curr1->val * curMul + overflow;
+			pushFront(&(t.digits->head), temp % 10);
+			t.digits->len++;
+			overflow = temp / 10;
+			curr1 = curr1->next;
+		}
+		if (overflow) {
+			pushFront(&(t.digits->head), overflow);
+			t.digits->len++;
+		}
+		for (j = i; j > 0; j--) {
+			pushBack(t.digits, 0);
+			t.digits->len++;
+		}
+		reverseList(&(t.digits));
+		longNum_add(**res, t, res);
+		pop(y.digits);
+		clearExit(t.digits);
+		curr1 = x.digits->head;
+		overflow = 0;
+	}
 }
