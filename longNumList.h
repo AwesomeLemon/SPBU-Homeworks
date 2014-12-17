@@ -14,8 +14,8 @@ typedef struct listLong {
 	int len;
 } listLong;
 
-void getNewNodeLong(valtype, nodeLong**);
-void pushFrontLong(nodeLong **, valtype);
-void popLong(listLong*);
-void clearExitLong(listLong*);
-void getNewListLong(listLong**);
+void long_list_get_node(valtype, nodeLong**);
+void long_list_push_front(nodeLong **, valtype);
+void long_list_pop(listLong*);
+void long_list_exit(listLong*);
+void long_list_get_list(listLong**);

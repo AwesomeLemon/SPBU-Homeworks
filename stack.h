@@ -3,10 +3,10 @@
 */
 #include "longNumList.h"
 #define stack listLong
-#define stack_get_new getNewListLong
-#define stack_pop popLong
-#define stack_push pushFrontLong
-#define stack_clear_exit clearExitLong
+#define stack_get_new long_list_get_list
+#define stack_pop long_list_pop
+#define stack_push long_list_push_front
+#define stack_clear_exit long_list_exit
 void stack_start_to_calculate(stack*);
 void stack_calculate(stack*, char);
 char stack_scan_for_calc(stack*, char**);

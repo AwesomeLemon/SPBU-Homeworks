@@ -15,13 +15,13 @@ typedef struct list {
 	int len;
 } list;
 
-void getNewNode(vtype, node**);
-void printList(list*);
-void removeValue(list*, vtype);
-void pushFront (node **, vtype);
-void pushBack(list*, vtype);
-void pop(list*);
-void clearExit(list*);
-void getNewList(list**);
-void reverseList(list**);
-void removeAfter(node**);
+void list_get_node(vtype, node**);
+void list_print(list*);
+void list_remove_value(list*, vtype);
+void list_push_front(node **, vtype);
+void list_push_back(list*, vtype);
+void list_pop(list*);
+void list_exit(list*);
+void list_get_list(list**);
+void list_reverse(list**);
+void list_remove_after(node**);

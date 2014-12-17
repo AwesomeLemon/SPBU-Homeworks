@@ -35,7 +35,7 @@ void longNum_add(longNum x, longNum y, longNum** z) {
 		while (curr1 && curr2) {
 			int temp;
 			temp = curr1->val + curr2->val + overflow;
-			pushFront(&((*z)->digits->head), temp % 10);
+			list_push_front(&((*z)->digits->head), temp % 10);
 			(*z)->digits->len++;
 			overflow = temp / 10;
 			if (flag == SUM_VARIABLE_NOT_EMPTY) {
@@ -46,19 +46,19 @@ void longNum_add(longNum x, longNum y, longNum** z) {
 			curr2 = curr2->next;
 		}
 		while (curr1) {
-			pushFront(&((*z)->digits->head), (curr1->val + overflow) % 10);
+			list_push_front(&((*z)->digits->head), (curr1->val + overflow) % 10);
 			(*z)->digits->len++;
 			overflow = (curr1->val + overflow) / 10;
 			curr1 = curr1->next;
 		}
 		while (curr2) {
-			pushFront(&((*z)->digits->head), (curr2->val+overflow) % 10);
+			list_push_front(&((*z)->digits->head), (curr2->val+overflow) % 10);
 			(*z)->digits->len++;
 			overflow = (curr2->val+overflow) / 10;
 			curr2 = curr2->next;
 		}
 		if (overflow) {
-			pushFront(&((*z)->digits->head), overflow);
+			list_push_front(&((*z)->digits->head), overflow);
 			(*z)->digits->len++;
 		}
 	}
@@ -66,7 +66,7 @@ void longNum_add(longNum x, longNum y, longNum** z) {
 		int bigger = isLonger(&x, &y);
 		if (bigger == LONG_NUM_EQUAL) { //For equal numbers. To avoid final answer of '-0'
 			(*z)->sign = 0;
-			pushFront(&((*z)->digits->head), 0);
+			list_push_front(&((*z)->digits->head), 0);
 			(*z)->digits->len++;
 			if (flag == 1) {
 				del = (*z)->digits->head;
@@ -89,7 +89,7 @@ void longNum_add(longNum x, longNum y, longNum** z) {
 							temp = curr1->val-curr2->val + 10;
 							curr1->next->val--;
 						}
-						pushFront(&((*z)->digits->head), temp);
+						list_push_front(&((*z)->digits->head), temp);
 						(*z)->digits->len++;
 						if (flag == SUM_VARIABLE_NOT_EMPTY) {
 							del = (*z)->digits->head;
@@ -100,11 +100,11 @@ void longNum_add(longNum x, longNum y, longNum** z) {
 				}
 				while (curr1) {
 					if (curr1->val >= 0) {
-						pushFront(&((*z)->digits->head), curr1->val);
+						list_push_front(&((*z)->digits->head), curr1->val);
 						(*z)->digits->len++;
 					}
 					else {
-						pushFront(&((*z)->digits->head), curr1->val + 10);
+						list_push_front(&((*z)->digits->head), curr1->val + 10);
 						(*z)->digits->len++;
 						curr1->next->val--;
 					}
@@ -123,7 +123,7 @@ void longNum_add(longNum x, longNum y, longNum** z) {
 							temp = curr2->val - curr1->val + 10;
 							curr2->next->val--;
 						}
-						pushFront(&((*z)->digits->head),temp);
+						list_push_front(&((*z)->digits->head),temp);
 						(*z)->digits->len++;
 						if (flag == SUM_VARIABLE_NOT_EMPTY) {
 							del = (*z)->digits->head;
@@ -134,11 +134,11 @@ void longNum_add(longNum x, longNum y, longNum** z) {
 				}
 				while (curr2) {
 					if (curr2->val >= 0) {
-						pushFront(&((*z)->digits->head), curr2->val);
+						list_push_front(&((*z)->digits->head), curr2->val);
 						(*z)->digits->len++;
 					}
 					else {
-						pushFront(&((*z)->digits->head), curr2->val + 10);
+						list_push_front(&((*z)->digits->head), curr2->val + 10);
 						(*z)->digits->len++;
 						curr2->next->val--;
 					}
@@ -149,11 +149,11 @@ void longNum_add(longNum x, longNum y, longNum** z) {
 	}
 	if (flag == GARBAGE_BEGINNING_SAVED) {
 		while (del->next) {
-			removeAfter(&del);
+			list_remove_after(&del);
 			(*z)->digits->len--;
 		}
 	}	
-	reverseList(&((*z)->digits));
+	list_reverse(&((*z)->digits));
 }
 
 void printLongNum(longNum x) {
@@ -161,7 +161,7 @@ void printLongNum(longNum x) {
 	if (x.digits->head) {
 		node* curr;
 		int flag = 1; //to avoid printing leading zeroes
-		reverseList(&(x.digits));
+		list_reverse(&(x.digits));
 		curr = x.digits->head;
 		while (curr) {
 			if (!(flag && !(curr->val))) {
@@ -184,8 +184,8 @@ int isLonger(longNum* x,longNum* y) {//SIGNS ARE NOT CONSIDERED!!!
 		else {
 			if (y->digits->len > x->digits->len) bigger = 0;
 			else {
-				reverseList(&(x->digits));
-				reverseList(&(y->digits));
+				list_reverse(&(x->digits));
+				list_reverse(&(y->digits));
 				curr1 = x->digits->head;
 				curr2 = y->digits->head;
 				while (curr1 && curr2) {
@@ -203,8 +203,8 @@ int isLonger(longNum* x,longNum* y) {//SIGNS ARE NOT CONSIDERED!!!
 							curr2 = curr2->next;
 						}
 				}
-				reverseList(&(x->digits));
-				reverseList(&(y->digits));
+				list_reverse(&(x->digits));
+				list_reverse(&(y->digits));
 			}
 		}
 		return bigger;
@@ -217,7 +217,7 @@ void longNum_scan(longNum** x) {
 		printf("Error: Memory cannot be allocated. Exiting.");
 		exit(0);
 	}
-	getNewList(&((*x)->digits));
+	list_get_list(&((*x)->digits));
 	(*x)->digits->len = 0;
 	printf("Enter a number\n");
 	scanf("%c", &c);
@@ -225,12 +225,12 @@ void longNum_scan(longNum** x) {
 	else {
 		(*x)->sign = 0;
 		(*x)->digits->len++;
-		pushFront(&((*x)->digits->head), atoi(&c));
+		list_push_front(&((*x)->digits->head), atoi(&c));
 	}
 	scanf("%c",&c);
 	while (c != '\n') {
 		(*x)->digits->len++;
-		pushFront(&((*x)->digits->head), atoi(&c));
+		list_push_front(&((*x)->digits->head), atoi(&c));
 		scanf("%c",&c);
 	}
 }
@@ -274,16 +274,16 @@ void longNum_div(longNum x, longNum y, longNum** z) {
 	t->sign = 0;
 	if (!isLonger(&x,&y)) {
 		if (x.sign && !y.sign) {
-			pushBack((*z)->digits, 1);
+			list_push_back((*z)->digits, 1);
 			(*z)->sign = 1;
 		}
 		else {
-			pushBack((*z)->digits, 0);
+			list_push_back((*z)->digits, 0);
 		}
 		(*z)->digits->len++;
 		return;
 	}
-	getNewList(&(t->digits));
+	list_get_list(&(t->digits));
 	if (x.sign == y.sign) {
 		tempsign = 0;
 	}
@@ -296,22 +296,22 @@ void longNum_div(longNum x, longNum y, longNum** z) {
 	x.sign = 0;
 	y.sign = 0;
 
-	reverseList(&(x.digits));
+	list_reverse(&(x.digits));
 
 	//check if y == 0
-	reverseList(&(y.digits));
+	list_reverse(&(y.digits));
 	if (!(y.digits->head->val)) {
 		printf("DIVISION BY ZERO");
 		exit(0);
 	}
-	reverseList(&(y.digits));
+	list_reverse(&(y.digits));
 
 	curr1 = x.digits->head;
 	curr2 = y.digits->head;
 	while (curr1) {
-		pushFront(&(t->digits->head), curr1->val);
+		list_push_front(&(t->digits->head), curr1->val);
 		if ((t->digits->len == 1) && (!t->digits->head->next->val)) { //if t used to be == 0 on previous iteration, this 0 should be deleted now. Otherwise after pushing mistake will occcur: for example, if we push "3" t will equal "30"
-			removeAfter(&(t->digits->head));
+			list_remove_after(&(t->digits->head));
 			t->digits->len--;
 		}
 		t->digits->len++;
@@ -320,19 +320,19 @@ void longNum_div(longNum x, longNum y, longNum** z) {
 			flag_lead_zeroes = 1;
 			while (isLonger(t,&y)) {
 				longNum_sub(*t, y, &t);
-				reverseList(&(t->digits));
+				list_reverse(&(t->digits));
 				while ((t->digits->head->val == 0) && (t->digits->len != 1)){
-					pop(t->digits);
+					list_pop(t->digits);
 				}
-				reverseList(&(t->digits));
+				list_reverse(&(t->digits));
 				count++;
 			}
-			pushFront(&((*z)->digits->head), count);
+			list_push_front(&((*z)->digits->head), count);
 			(*z)->digits->len++;
 		}
 		else {
 			if (flag_lead_zeroes) {
-				pushFront(&((*z)->digits->head), 0);
+				list_push_front(&((*z)->digits->head), 0);
 				(*z)->digits->len++;
 			}
 		}
@@ -342,9 +342,9 @@ void longNum_div(longNum x, longNum y, longNum** z) {
 	//for mathematically right division (e.g. -9 / 4 should equal -3, not -2)
 	if (flag_sign) {
 		longNum* one = (longNum*) malloc(sizeof(longNum));
-		getNewList(&one->digits);
+		list_get_list(&one->digits);
 		one->sign = 0;
-		pushBack(one->digits, 1);
+		list_push_back(one->digits, 1);
 		longNum_add(**z, *one, z);
 		longNum_exit(one);
 	}
@@ -353,7 +353,7 @@ void longNum_div(longNum x, longNum y, longNum** z) {
 }
 
 void longNum_exit(longNum* x) {
-	clearExit(x->digits);
+	list_exit(x->digits);
 	free(x);
 }
 
@@ -364,12 +364,12 @@ void longNum_scan_no_sign(longNum** x) {
 		printf("Error: Memory cannot be allocated. Exiting.");
 		exit(0);
 	}
-	getNewList(&((*x)->digits));
+	list_get_list(&((*x)->digits));
 	(*x)->digits->len = 0;
 	scanf("%c", &c);
 	while ((c <= '9') && (c >= '0')) {
 		(*x)->digits->len++;
-		pushFront(&((*x)->digits->head), atoi(&c));
+		list_push_front(&((*x)->digits->head), atoi(&c));
 		scanf("%c",&c);
 	}
 	ungetc((int) c, stdin);
@@ -385,29 +385,29 @@ void longNum_mul_kernel(longNum x, longNum y, longNum** res) {
 	for (i; i < len; i++) {
 		longNum t;
 		int curMul = y.digits->head->val;
-		getNewList(&(t.digits));
+		list_get_list(&(t.digits));
 		t.sign = 0;
 		t.digits->len = 0;
 		while (curr1) {
 			int temp;
 			temp = curr1->val * curMul + overflow;
-			pushFront(&(t.digits->head), temp % 10);
+			list_push_front(&(t.digits->head), temp % 10);
 			t.digits->len++;
 			overflow = temp / 10;
 			curr1 = curr1->next;
 		}
 		if (overflow) {
-			pushFront(&(t.digits->head), overflow);
+			list_push_front(&(t.digits->head), overflow);
 			t.digits->len++;
 		}
 		for (j = i; j > 0; j--) {
-			pushBack(t.digits, 0);
+			list_push_back(t.digits, 0);
 			t.digits->len++;
 		}
-		reverseList(&(t.digits));
+		list_reverse(&(t.digits));
 		longNum_add(**res, t, res);
-		pop(y.digits);
-		clearExit(t.digits);
+		list_pop(y.digits);
+		list_exit(t.digits);
 		curr1 = x.digits->head;
 		overflow = 0;
 	}

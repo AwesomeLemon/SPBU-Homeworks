@@ -39,7 +39,7 @@ void stack_calculate(stack* stack1, char sign) {
 				printf("Error: Memory cannot be allocated. Exiting.");
 				exit(0);
 			}
-			getNewList(&t->digits);
+			list_get_list(&t->digits);
 			longNum_mul(stack1->head->val, stack1->head->next->val, &t);
 			stack_pop(stack1);
 			stack_pop(stack1);
@@ -49,20 +49,20 @@ void stack_calculate(stack* stack1, char sign) {
 			break;
 		case '/':
 			//Here we check if stack1->head->val == 0
-			reverseList(&(stack1->head->val.digits));
+			list_reverse(&(stack1->head->val.digits));
 			if (!stack1->head->val.digits->head->val) {
 				printf("DIVISION BY ZERO");
 				exit(0);
 			}
 			
 			else {
-				reverseList(&(stack1->head->val.digits));
+				list_reverse(&(stack1->head->val.digits));
 				t = (longNum*) malloc(sizeof(longNum));
 				if (!t) {
 					printf("Error: Memory cannot be allocated. Exiting.");
 					exit(0);
 				}
-				getNewList(&t->digits);
+				list_get_list(&t->digits);
 				longNum_div(stack1->head->next->val, stack1->head->val, &t);
 				stack_pop(stack1);
 				stack_pop(stack1);
@@ -84,7 +84,7 @@ char stack_scan_for_calc(stack* stack1, char **previous) {
 			x->sign = 1;
 			**previous = ' ';
 		}
-		pushBack(x->digits, temp - '0');
+		list_push_back(x->digits, temp - '0');
 		x->digits->len++;
 		stack_push(&(stack1->head), *x);
 		stack1->len++;

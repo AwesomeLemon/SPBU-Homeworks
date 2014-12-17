@@ -2,7 +2,7 @@
 		by Alexander Chebykin
 */
 #include "list.h"
-void getNewNode(vtype val, node** out) {
+void list_get_node(vtype val, node** out) {
 	*out = (node*) malloc(sizeof(node));
 	if (*out) {
 		(*out)->val = val;
@@ -14,7 +14,7 @@ void getNewNode(vtype val, node** out) {
 	}
 }
 
-void printList(list* list1) {
+void list_print(list* list1) {
 	if (list1->head) {
 		node* curr;
 		curr = list1->head;
@@ -27,11 +27,11 @@ void printList(list* list1) {
 	else printf("The list is empty.");
 }
 
-void removeValue(list* list1, vtype val) {
+void list_remove_value(list* list1, vtype val) {
 	if (list1->head) {
 		node* curr = list1->head;
 		if (curr->val == val) {
-				pop(list1);
+				list_pop(list1);
 				return;
 		}
 		else { 
@@ -56,28 +56,28 @@ void removeValue(list* list1, vtype val) {
 	}
 }
 
-void pushFront (node **head, vtype val) {
+void list_push_front(node **head, vtype val) {
     node *tmp;
-	getNewNode(val, &tmp);
+	list_get_node(val, &tmp);
     tmp->next = (*head);
     (*head) = tmp;
 }
 
-void pushBack(list* list1, vtype val) {
+void list_push_back(list* list1, vtype val) {
 	if (list1->head) {
 		node* curr;
 		curr = list1->head;
 		while (curr->next) {
 			curr = curr->next;
 		}
-		getNewNode(val, &(curr->next));
+		list_get_node(val, &(curr->next));
 	}
 	else {
-		pushFront(&(list1->head), val);
+		list_push_front(&(list1->head), val);
 	}
 }
 
-void pop(list* list1) {
+void list_pop(list* list1) {
 	if (list1->head) {
 			node* t = list1->head->next;
 			free(list1->head);
@@ -85,15 +85,15 @@ void pop(list* list1) {
 			list1->len--;
 	}
 }
-void clearExit(list* list1) {
+void list_exit(list* list1) {
 	while (list1->len > 0) {
-		pop(list1);
+		list_pop(list1);
 	}
 	free(list1->head);
 	free(list1);
 }
 
-void getNewList(list** list1) {
+void list_get_list(list** list1) {
 	*list1 = (list*) malloc(sizeof(list));
 	if (!list1) {
 		printf("Error: Memory cannot be allocated. Exiting.");
@@ -103,19 +103,19 @@ void getNewList(list** list1) {
 	(*list1)->len = 0;
 }
 
-void reverseList(list** list1) {
+void list_reverse(list** list1) {
 	int i;
 	node* curr = (*list1)->head;
 	int len = (*list1)->len;
 	for (i=0; i < len-1; i++) {
 		node* temp = curr->next->next;
-		pushFront(&((*list1)->head), curr->next->val);
+		list_push_front(&((*list1)->head), curr->next->val);
 		free(curr->next);
 		curr->next = temp;
 	}
 }
 
-void removeAfter(node** del) {
+void list_remove_after(node** del) {
 	if ((*del)->next) {
 		node* temp = (*del)->next->next;
 		free((*del)->next);
