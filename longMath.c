@@ -63,7 +63,7 @@ void longNum_add(longNum x, longNum y, longNum** z) {
 		}
 	}
 	else {
-		int bigger = isLonger(&x, &y);
+		int bigger = longNum_is_first_longer(&x, &y);
 		if (bigger == LONG_NUM_EQUAL) { //For equal numbers. To avoid final answer of '-0'
 			(*z)->sign = 0;
 			list_push_front(&((*z)->digits->head), 0);
@@ -156,7 +156,7 @@ void longNum_add(longNum x, longNum y, longNum** z) {
 	list_reverse(&((*z)->digits));
 }
 
-void printLongNum(longNum x) {
+void longNum_print(longNum x) {
 	if (x.sign) printf("-");
 	if (x.digits->head) {
 		node* curr;
@@ -171,12 +171,11 @@ void printLongNum(longNum x) {
 			curr = curr->next;
 		}
 		if (flag) printf("0");
-		printf("\n");
 	}
 	else printf("The list is empty.");
 }
 
-int isLonger(longNum* x,longNum* y) {//SIGNS ARE NOT CONSIDERED!!!
+int longNum_is_first_longer(longNum* x,longNum* y) {//SIGNS ARE NOT CONSIDERED!!!
 		int bigger = LONG_NUM_EQUAL; //For equal numbers. To avoid final answer of '-0' in addition and subtraction
 		node* curr1;
 		node* curr2;
@@ -214,8 +213,8 @@ void longNum_scan(longNum** x) {
 	char c;
 	*x = (longNum*) malloc(sizeof(longNum));
 	if (!x) {
-		printf("Error: Memory cannot be allocated. Exiting.");
-		exit(0);
+		printf("Error: Memory cannot be allocated. Exiting.\n");
+		exit(1);
 	}
 	list_get_list(&((*x)->digits));
 	(*x)->digits->len = 0;
@@ -236,8 +235,6 @@ void longNum_scan(longNum** x) {
 }
 
 void longNum_mul(longNum x, longNum y, longNum** res) {
-	node* curr1;
-	node* curr2;
 	int tempsign;
 	int overflow = 0;
 	(*res)->sign = 0;
@@ -250,7 +247,7 @@ void longNum_mul(longNum x, longNum y, longNum** res) {
 	x.sign = 0;
 	y.sign = 0;
 
-	if(isLonger(&x,&y)) {
+	if(longNum_is_first_longer(&x,&y)) {
 		longNum_mul_kernel(x,y,res);
 	}
 	else {
@@ -267,12 +264,12 @@ void longNum_div(longNum x, longNum y, longNum** z) {
 	node* curr2;
 	int flag_sign = 0;
 	if (!t) {
-		printf("Error: Memory cannot be allocated. Exiting.");
-		exit(0);
+		printf("Error: Memory cannot be allocated. Exiting.\n");
+		exit(1);
 	}
 	(*z)->sign = 0;
 	t->sign = 0;
-	if (!isLonger(&x,&y)) {
+	if (!longNum_is_first_longer(&x,&y)) {
 		if (x.sign && !y.sign) {
 			list_push_back((*z)->digits, 1);
 			(*z)->sign = 1;
@@ -284,13 +281,11 @@ void longNum_div(longNum x, longNum y, longNum** z) {
 		return;
 	}
 	list_get_list(&(t->digits));
+	if (x.sign) flag_sign = 1;//for mathematically right division (e.g. -9 / 4 should equal -3, not -2)
 	if (x.sign == y.sign) {
 		tempsign = 0;
 	}
 	else {
-		if (x.sign && !y.sign) {
-			flag_sign = 1;
-		}
 		tempsign = 1;
 	}
 	x.sign = 0;
@@ -300,9 +295,9 @@ void longNum_div(longNum x, longNum y, longNum** z) {
 
 	//check if y == 0
 	list_reverse(&(y.digits));
-	if (!(y.digits->head->val)) {
-		printf("DIVISION BY ZERO");
-		exit(0);
+	if (!(y.digits->head->val)) {// We don't go in here in the calculator(because we've already checked it before), but I'll leave it in case this will be used as a separate library
+		printf("Division by zero\n");
+		exit(1);
 	}
 	list_reverse(&(y.digits));
 
@@ -315,10 +310,10 @@ void longNum_div(longNum x, longNum y, longNum** z) {
 			t->digits->len--;
 		}
 		t->digits->len++;
-		if (isLonger(t,&y)) {
+		if (longNum_is_first_longer(t,&y)) {
 			int count = 0;
 			flag_lead_zeroes = 1;
-			while (isLonger(t,&y)) {
+			while (longNum_is_first_longer(t,&y)) {
 				longNum_sub(*t, y, &t);
 				list_reverse(&(t->digits));
 				while ((t->digits->head->val == 0) && (t->digits->len != 1)){
@@ -357,12 +352,12 @@ void longNum_exit(longNum* x) {
 	free(x);
 }
 
-void longNum_scan_no_sign(longNum** x) {
+int longNum_scan_no_sign(longNum** x) {
 	char c;
 	*x = (longNum*) malloc(sizeof(longNum));
 	if (!x) {
-		printf("Error: Memory cannot be allocated. Exiting.");
-		exit(0);
+		printf("Error: Memory cannot be allocated. Exiting.\n");
+		exit(1);
 	}
 	list_get_list(&((*x)->digits));
 	(*x)->digits->len = 0;
@@ -370,9 +365,14 @@ void longNum_scan_no_sign(longNum** x) {
 	while ((c <= '9') && (c >= '0')) {
 		(*x)->digits->len++;
 		list_push_front(&((*x)->digits->head), atoi(&c));
-		scanf("%c",&c);
+		if (scanf("%c",&c) == EOF) {
+			return 0;//Correctly written number
+		}
 	}
-	ungetc((int) c, stdin);
+	if (c != '\n') {
+		return 1;//Incorrectly written number
+	}
+	return 0;//Correctly written number
 }
 
 void longNum_mul_kernel(longNum x, longNum y, longNum** res) {

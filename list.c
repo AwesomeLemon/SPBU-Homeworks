@@ -9,8 +9,8 @@ void list_get_node(vtype val, node** out) {
 		(*out)->next = 0;
 	}
 	else {
-		printf("Error: Memory cannot be allocated. Exiting.");
-		exit(0);
+		printf("Error: Memory cannot be allocated. Exiting.\n");
+		exit(1);
 	}
 }
 
@@ -96,8 +96,8 @@ void list_exit(list* list1) {
 void list_get_list(list** list1) {
 	*list1 = (list*) malloc(sizeof(list));
 	if (!list1) {
-		printf("Error: Memory cannot be allocated. Exiting.");
-		exit(0);
+		printf("Error: Memory cannot be allocated. Exiting.\n");
+		exit(1);
 	}
 	(*list1)->head = 0;
 	(*list1)->len = 0;

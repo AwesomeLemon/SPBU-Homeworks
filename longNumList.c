@@ -9,8 +9,8 @@ void long_list_get_node(valtype val, nodeLong** out) {
 		(*out)->next = 0;
 	}
 	else {
-		printf("Error: Memory cannot be allocated. Exiting.");
-		exit(0);
+		printf("Error: Memory cannot be allocated. Exiting.\n");
+		exit(1);
 	}
 }
 
@@ -29,20 +29,21 @@ void long_list_pop(listLong* list1) {
 			list1->len--;
 	}
 }
+
+void long_list_get_list(listLong** list1) {
+	*list1 = (listLong*) malloc(sizeof(list));
+	if (!list1) {
+		printf("Error: Memory cannot be allocated. Exiting.\n");
+		exit(1);
+	}
+	(*list1)->head = 0;
+	(*list1)->len = 0;
+}
+
 void long_list_exit(listLong* list1) {
 	while (list1->len > 0) {
 		long_list_pop(list1);
 	}
 	free(list1->head);
 	free(list1);
-}
-
-void long_list_get_list(listLong** list1) {
-	*list1 = (listLong*) malloc(sizeof(list));
-	if (!list1) {
-		printf("Error: Memory cannot be allocated. Exiting.");
-		exit(0);
-	}
-	(*list1)->head = 0;
-	(*list1)->len = 0;
 }
