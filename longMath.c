@@ -68,9 +68,9 @@ void longNum_add(longNum x, longNum y, longNum** z) {
 			(*z)->sign = 0;
 			list_push_front(&((*z)->digits->head), 0);
 			(*z)->digits->len++;
-			if (flag == 1) {
+			if (flag == SUM_VARIABLE_NOT_EMPTY) {
 				del = (*z)->digits->head;
-				flag = 2;
+				flag = GARBAGE_BEGINNING_SAVED;
 			}
 		}
 		else {
@@ -81,22 +81,19 @@ void longNum_add(longNum x, longNum y, longNum** z) {
 				(*z)->sign = x.sign;
 				while (curr1 && curr2) {
 					int temp = 0;
-					if (curr1->val > curr2->val) {
-						temp = curr1->val-curr2->val;
+					temp = curr1->val - curr2->val;
+					if (curr1->val < curr2->val) {
+						temp += 10;
+						curr1->next->val--;
 					}
-					else 
-						if (curr1->val < curr2->val) {
-							temp = curr1->val-curr2->val + 10;
-							curr1->next->val--;
-						}
-						list_push_front(&((*z)->digits->head), temp);
-						(*z)->digits->len++;
-						if (flag == SUM_VARIABLE_NOT_EMPTY) {
-							del = (*z)->digits->head;
-							flag = GARBAGE_BEGINNING_SAVED;
-						}
-						curr1 = curr1->next;
-						curr2 = curr2->next;
+					list_push_front(&((*z)->digits->head), temp);
+					(*z)->digits->len++;
+					if (flag == SUM_VARIABLE_NOT_EMPTY) {
+						del = (*z)->digits->head;
+						flag = GARBAGE_BEGINNING_SAVED;
+					}
+					curr1 = curr1->next;
+					curr2 = curr2->next;
 				}
 				while (curr1) {
 					if (curr1->val >= 0) {
@@ -115,22 +112,19 @@ void longNum_add(longNum x, longNum y, longNum** z) {
 				(*z)->sign = y.sign;
 				while (curr1 && curr2) {
 					int temp = 0;
-					if (curr2->val > curr1->val) {
-						temp = curr2->val-curr1->val;
+					temp = curr2->val - curr1->val;
+					if (curr2->val < curr1->val) {
+						temp += 10;
+						curr2->next->val--;
 					}
-					else 
-						if (curr2->val < curr1->val) {
-							temp = curr2->val - curr1->val + 10;
-							curr2->next->val--;
-						}
-						list_push_front(&((*z)->digits->head),temp);
-						(*z)->digits->len++;
-						if (flag == SUM_VARIABLE_NOT_EMPTY) {
-							del = (*z)->digits->head;
-							flag = GARBAGE_BEGINNING_SAVED;
-						}
-						curr1 = curr1->next;
-						curr2 = curr2->next;
+					list_push_front(&((*z)->digits->head), temp);
+					(*z)->digits->len++;
+					if (flag == SUM_VARIABLE_NOT_EMPTY) {
+						del = (*z)->digits->head;
+						flag = GARBAGE_BEGINNING_SAVED;
+					}
+					curr1 = curr1->next;
+					curr2 = curr2->next;
 				}
 				while (curr2) {
 					if (curr2->val >= 0) {
@@ -171,6 +165,7 @@ void longNum_print(longNum x) {
 			curr = curr->next;
 		}
 		if (flag) printf("0");
+		list_reverse(&(x.digits));
 	}
 	else printf("The list is empty.");
 }
@@ -256,6 +251,44 @@ void longNum_mul(longNum x, longNum y, longNum** res) {
 	(*res)->sign = tempsign;
 }
 
+void longNum_mul_kernel(longNum x, longNum y, longNum** res) {
+	int i = 0;
+	int j;
+	int len = y.digits->len;
+	node* curr1 = x.digits->head;
+	node* curr2 = y.digits->head;
+	int overflow = 0;
+	for (i; i < len; i++) {
+		longNum t;
+		int curMul = y.digits->head->val;
+		list_get_list(&(t.digits));
+		t.sign = 0;
+		t.digits->len = 0;
+		while (curr1) {
+			int temp;
+			temp = curr1->val * curMul + overflow;
+			list_push_front(&(t.digits->head), temp % 10);
+			t.digits->len++;
+			overflow = temp / 10;
+			curr1 = curr1->next;
+		}
+		if (overflow) {
+			list_push_front(&(t.digits->head), overflow);
+			t.digits->len++;
+		}
+		for (j = i; j > 0; j--) {
+			list_push_back(t.digits, 0);
+			t.digits->len++;
+		}
+		list_reverse(&(t.digits));
+		longNum_add(**res, t, res);
+		list_pop(y.digits);
+		list_exit(t.digits);
+		curr1 = x.digits->head;
+		overflow = 0;
+	}
+}
+
 void longNum_div(longNum x, longNum y, longNum** z) {
 	int tempsign;
 	int flag_lead_zeroes = 0;
@@ -275,7 +308,13 @@ void longNum_div(longNum x, longNum y, longNum** z) {
 			(*z)->sign = 1;
 		}
 		else {
-			list_push_back((*z)->digits, 0);
+			if (x.sign && y.sign) {
+				list_push_back((*z)->digits, 1);
+				(*z)->sign = 0;
+			}
+			else {
+				list_push_back((*z)->digits, 0);
+			}
 		}
 		(*z)->digits->len++;
 		return;
@@ -373,42 +412,4 @@ int longNum_scan_no_sign(longNum** x) {
 		return 1;//Incorrectly written number
 	}
 	return 0;//Correctly written number
-}
-
-void longNum_mul_kernel(longNum x, longNum y, longNum** res) {
-	int i = 0;
-	int j;
-	int len = y.digits->len;
-	node* curr1 = x.digits->head;
-	node* curr2 = y.digits->head;
-	int overflow = 0;
-	for (i; i < len; i++) {
-		longNum t;
-		int curMul = y.digits->head->val;
-		list_get_list(&(t.digits));
-		t.sign = 0;
-		t.digits->len = 0;
-		while (curr1) {
-			int temp;
-			temp = curr1->val * curMul + overflow;
-			list_push_front(&(t.digits->head), temp % 10);
-			t.digits->len++;
-			overflow = temp / 10;
-			curr1 = curr1->next;
-		}
-		if (overflow) {
-			list_push_front(&(t.digits->head), overflow);
-			t.digits->len++;
-		}
-		for (j = i; j > 0; j--) {
-			list_push_back(t.digits, 0);
-			t.digits->len++;
-		}
-		list_reverse(&(t.digits));
-		longNum_add(**res, t, res);
-		list_pop(y.digits);
-		list_exit(t.digits);
-		curr1 = x.digits->head;
-		overflow = 0;
-	}
 }
