@@ -372,9 +372,8 @@ void longNum_div(longNum x, longNum y, longNum** z) {
 		}
 		curr1 = curr1->next;
 	}
-	
 	//for mathematically right division (e.g. -9 / 4 should equal -3, not -2)
-	if (flag_sign) {
+	if (flag_sign && !(t->digits->len == 1 && t->digits->head->val == 0)) {
 		longNum* one = (longNum*) malloc(sizeof(longNum));
 		list_get_list(&one->digits);
 		one->sign = 0;
