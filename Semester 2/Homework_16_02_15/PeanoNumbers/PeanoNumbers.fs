@@ -1,5 +1,6 @@
 ﻿// Functions for working with Peano numbers.
 //      by Alexander Chebykin
+// Estimated time: 40 minutes Actual time: 1hr
 type peano = Zero | S of peano
 let suc (p : peano) = S p;
 let minus1 (p : peano) = 
@@ -33,5 +34,5 @@ let rec pow a b =
     | _, S b -> mul a (pow a b)
 [<EntryPoint>]
 let main argv = 
-    printfn "%A" (peanoToInt (pow (S(S(S (S (Zero))))) (S(S(S (S (Zero)))))))
+    printfn "4^4 +1 -1 -1 - 4 = %A" (peanoToInt (minus (minus1(minus1(suc(pow (S(S(S (S (Zero))))) (S(S(S (S (Zero))))))))) (S(S(S (S (Zero)))))))
     0
