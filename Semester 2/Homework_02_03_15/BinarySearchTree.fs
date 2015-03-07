@@ -9,8 +9,58 @@ let rec add x t =
   | Cons (c, l, r) ->
       if x < c then Cons (c, add x l, r) else Cons (c, l, add x r)
 
-let combineIntoTree c l r =
-   Cons (c, l, r)
+let rec findSmallest t = 
+  match t with
+  | Cons (c, Nil, _) -> c
+  | Cons (c, l, _) -> findSmallest l
+  | Nil -> exit(1) //There is nor smallest, nor biggest value in an empty tree, so function cannot be calculated, and that's an error
+
+let rec del x t = 
+  match t with
+  | Cons (c, Nil, Nil) -> Nil
+  | Cons (c, l, r) ->
+    if x < c then Cons (c, del x l, r)
+    else if x > c then  Cons (c, l, del x r) 
+    else 
+      match l,r with
+      | l, Nil -> l // if both l and r are "Nil" this option will still give the right answer "Nil"
+      | Nil, r -> r
+      | l, r -> Cons (findSmallest r, l, del (findSmallest r) r)
+  | Nil -> Nil
+
+let treeWalk mode t= 
+    let rec lcr t = 
+        match t with
+        | Nil -> printf ""
+        | Cons (c, t1, t2) ->                                    
+            lcr t1
+            printf "%i " c
+            lcr t2
+
+    let rec lrc t = 
+        match t with
+        | Nil -> printf ""
+        | Cons (c, t1, t2) ->                                  
+            lrc t1
+            lrc t2
+            printf "%i " c  
+
+    let rec clr t = 
+        match t with
+        | Nil -> printf ""
+        | Cons (c, t1, t2) ->         
+            printf "%i " c                           
+            clr t1
+            clr t2
+    printf "%s: " mode
+    match mode with
+    | "lrc" -> lrc t
+    | "lcr" -> lcr t
+    | "clr" -> clr t
+    | _ -> printf "Error: there's no such tree-walk as %s" mode
+    printf "\n"
+
+
 
 let rec map f t = 
   match t with
@@ -23,26 +73,21 @@ let rec fold f a t =
   | Cons(c, l, r) -> f c (fold f a l)  (fold f a r)
 
 let sum t = 
-  match t with
-  | Nil -> None
-  | t -> 
-    let zero = 0.0
-    let res = fold (fun a la ra -> a + la + ra ) zero t
-    Some res
+   fold (fun a la ra -> a + la + ra ) 0.0 t
 
 let minOfTree t =
-  match t with
-  | Nil -> None
-  | Cons(c, l, r) -> 
-    let res = fold (fun a la ra -> min (min a la) (min a ra)) c t
-    Some res
+    fold (fun a la ra -> 
+            match la, ra with 
+            | None, None -> Some a
+            | None, Some x -> Some (min x a)
+            | Some x, None -> Some (min x a)
+            | Some x, Some y -> Some((min (min x a) (min y a)))) None t
+
+let combineIntoTree c l r =
+   Cons (c, l, r)
 
 let clone t =
-  match t with
-  | Nil -> None
-  | t -> 
-    let res = fold combineIntoTree Nil t
-    Some res
+  fold combineIntoTree Nil t
 
 let printTree t =
   let rec printT t = 
@@ -74,17 +119,15 @@ let main argv =
     printTree tree
     //Task 16 is integrated into tasks 17 - 19
     //Task 17: sum of all values in tree via fold
-    match sum tree with 
-    | None -> printfn "The tree is empty"
-    | Some x -> printfn "Sum of elements equals %A" x
+    printfn "Sum of elements equals %A" (sum tree)
     //Task 18: minimal element in tree via fold
     match minOfTree tree with
     | None -> printfn "The tree is empty"
     | Some x -> printfn "Minimal element equals %A" x
     //Task 19: clone tree via fold
-    match clone tree with 
-    | None -> printfn "The tree is empty"
-    | Some x -> 
+    match tree with 
+    | Nil -> printfn "The tree is empty"
+    | tree -> 
         printfn "The cloned tree (obviously) is"
-        printTree x
+        printTree (clone tree)
     0

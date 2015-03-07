@@ -1,15 +1,15 @@
 ﻿//      by Alexander Chebykin
 // Estimated time: 1hr. Actual time: 3.5 hr.
 module list
-type list = Nil | Cons of int * list
-
-let add l x =
-  Cons(x, l)
+type list<'A> = Nil | Cons of 'A * list<'A>
 
 let rec fold f a l = 
   match l with
   | Nil -> a
   | Cons (x, l) -> fold f (f a x) l
+
+let add l x =
+  Cons(x, l)
 
 let reverse l =
   fold (add) Nil l
@@ -24,12 +24,11 @@ let rec listPrint l =
   match l with
   | Nil -> printf "\n"
   | Cons (x, l) -> 
-    printf "%i " x
+    printf "%A " x
     listPrint l
 
-let Gorner co x0= 
-  let help a x = x + a * x0
-  fold (help) 0 co
+let gorner co x0= 
+  fold (fun a x -> x + a * x0) 0 co
 
 [<EntryPoint>]
 let main argv = 
@@ -56,7 +55,6 @@ let main argv =
     let x0 = 5
     printfn "Gorner's Scheme: Coefficients in decreasing order (e.g. if polynom was 5x^2 + 7 then you'd see 5 0 7) :"
     listPrint co
-    printfn "Variable equals %i" x0
-    printfn "The result is %i" (Gorner co x0)
-
+    printfn "Variable equals %A" x0
+    printfn "The result is %A" (gorner co x0)
     0
