@@ -15,10 +15,10 @@ let reverse l =
   fold (add) Nil l
 
 let filterViaFold f l = 
-  fold (fun l x -> if f x then Cons(x, l) else l) Nil l
+  reverse (fold (fun l x -> if f x then Cons(x, l) else l) Nil l)
 
 let mapViaFold f l =
-  fold (fun t x -> add t (f x)) Nil l
+  reverse (fold (fun t x -> add t (f x)) Nil l)
 
 let rec listPrint l = 
   match l with
@@ -44,12 +44,12 @@ let main argv =
     let t = Cons(1, Cons(2, Cons(3, Cons(4, Nil))))
     printfn "Filtering by (x>2):"
     let func x = if x > 2 then true else false
-    listPrint (reverse (filterViaFold (func) t))
+    listPrint (filterViaFold (func) t)
     //Task 12: map via fold
     let t = Cons(1, Cons(2, Cons(3, Cons(4, Nil))))
     printfn "Map: multiply by 17:"
     let func x = x * 17
-    listPrint (reverse (mapViaFold (func) t))
+    listPrint (mapViaFold (func) t)
     //Task 13: Gorner's scheme via fold
     let co = Cons(1, Cons(17, Cons(0, Cons(4, Nil))))
     let x0 = 5

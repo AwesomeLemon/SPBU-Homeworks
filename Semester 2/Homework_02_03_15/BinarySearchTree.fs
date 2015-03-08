@@ -1,6 +1,6 @@
 ﻿//Polymorphal binary search tree and functions to work with it
 //      by Alexander Chebykin
-// Estimated time: 2hr. Actual time: 9hr.
+// Estimated time: 2hr. Actual time: 9.5hr.
 module tree
 type Tree<'A> = Nil | Cons of 'A * Tree<'A> * Tree<'A>
 let rec add x t =
@@ -11,9 +11,9 @@ let rec add x t =
 
 let rec findSmallest t = 
   match t with
-  | Cons (c, Nil, _) -> c
+  | Cons (c, Nil, _) -> Some c
   | Cons (c, l, _) -> findSmallest l
-  | Nil -> exit(1) //There is nor smallest, nor biggest value in an empty tree, so function cannot be calculated, and that's an error
+  | Nil -> None 
 
 let rec del x t = 
   match t with
@@ -25,7 +25,11 @@ let rec del x t =
       match l,r with
       | l, Nil -> l // if both l and r are "Nil" this option will still give the right answer "Nil"
       | Nil, r -> r
-      | l, r -> Cons (findSmallest r, l, del (findSmallest r) r)
+      | l, r -> 
+          let temp = findSmallest r
+          match temp with
+          | Some x -> Cons (x, l, del x r)
+          | None -> t //This line will never be executed ('cause it can be only if r = Nil, and we've already seen to that case), but if it will, it'd mean that deletion has gone wrong and it's only logical to return initial tree
   | Nil -> Nil
 
 let treeWalk mode t= 
@@ -81,7 +85,7 @@ let minOfTree t =
             | None, None -> Some a
             | None, Some x -> Some (min x a)
             | Some x, None -> Some (min x a)
-            | Some x, Some y -> Some((min (min x a) (min y a)))) None t
+            | Some x, Some y -> Some (min (min x a) y)) None t
 
 let combineIntoTree c l r =
    Cons (c, l, r)
