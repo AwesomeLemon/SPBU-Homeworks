@@ -141,6 +141,20 @@ type Net(verges: (int * int) list, numberOfNods, OSs :string[]) =
       // And now infected Computers are getting completely viral so that on the next move they'll be able to infect their neighbours:
       for i = 0 to graph.Size - 1 do
        if (graph.ValAt i).Infection = 1 then (graph.ValAt i).ChangeInfection 2
+    member self.Print =
+      let graph = self :> IGraphMarked<Computer>
+      let c = [|for i in 0 .. graph.Size - 1 -> if (graph.ValAt i).Infection = 2 then "Infected" else "Healthy"|]
+      printf "
+        (0. Windows%s) --> (1. Linux   %s) --> (2. OS X %s) --> (3. Linux    %s)
+                                      |                  |                       |
+                                      |                  |                       |
+                                     \/                 \/                       \/
+                         (6. Windows     %s) --> (4. Unknown    %s) <---(5. Windows   %s)
+                          |
+                          |
+                          \/
+                         (7. OS X %s)
+        \n\n" c.[0] c.[1] c.[2] c.[3] c.[4] c.[5] c.[6] c.[7]
   end
 
 [<EntryPoint>]
@@ -156,7 +170,7 @@ let main argv =
   printfn "You can get to node %i from nodes %A//Lists implementation" testNode (canGetFrom gr2 testNode)
   //Task 26
   printfn "Controls: press any key for the next move; press 'Esc' to quit.\nNotation: 2 - viral computer; 0 - healthy"
-  let mutable net = new Net ([(0, 1); (1, 2); (2, 3); (2, 4); (3, 4); (1, 5); (1, 6); (5, 7); (2, 5)], 8, [|"Windows"; "Linux"; "OS X"; "Linux"; "Unknown"; "Windows"; "Windows"; "OS X"|])
+  let mutable net = new Net ([(0, 1); (1, 2); (2, 3); (2, 4); (3, 5); (5, 4); (1, 6); (6, 4); (6, 7)], 8, [|"Windows"; "Linux"; "OS X"; "Linux"; "Unknown"; "Windows"; "Windows"; "OS X"|])
   ((net :> IGraphMarked<Computer>).ValAt 0).ChangeInfection 2 
   let mutable flag = true
   while flag do
@@ -164,5 +178,5 @@ let main argv =
     | ConsoleKey.Escape -> flag <- false
     | _ -> 
       net.emulateNextStep
-      net.PrintInfection
+      net.Print
   0
