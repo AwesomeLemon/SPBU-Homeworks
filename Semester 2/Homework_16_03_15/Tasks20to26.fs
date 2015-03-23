@@ -154,7 +154,7 @@ type Net(verges: (int * int) list, numberOfNods, OSs :string[]) =
                           |
                           \/
                          (7. OS X %s)
-        \n\n" c.[0] c.[1] c.[2] c.[3] c.[4] c.[5] c.[6] c.[7]
+        \n\n" c.[0] c.[1] c.[2] c.[3] c.[6] c.[4] c.[5] c.[7]
   end
 
 [<EntryPoint>]
@@ -169,7 +169,7 @@ let main argv =
   printfn "You can get to node %i from nodes %A//Matrix implementation" testNode (canGetFrom gr testNode)
   printfn "You can get to node %i from nodes %A//Lists implementation" testNode (canGetFrom gr2 testNode)
   //Task 26
-  printfn "Controls: press any key for the next move; press 'Esc' to quit.\nNotation: 2 - viral computer; 0 - healthy"
+  printfn "Controls: press any key for the next move; press 'Esc' to quit."
   let mutable net = new Net ([(0, 1); (1, 2); (2, 3); (2, 4); (3, 5); (5, 4); (1, 6); (6, 4); (6, 7)], 8, [|"Windows"; "Linux"; "OS X"; "Linux"; "Unknown"; "Windows"; "Windows"; "OS X"|])
   ((net :> IGraphMarked<Computer>).ValAt 0).ChangeInfection 2 
   let mutable flag = true
