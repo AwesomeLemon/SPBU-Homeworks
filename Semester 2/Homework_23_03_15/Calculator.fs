@@ -55,24 +55,15 @@ let expressionToTreeParam (str : string, pars: (string * int) []) =
             out.Push curRes
         with
         | Error(msg) -> raise(Error ("Not enough integer data"))
-
     let stringPartToInt start = 
         let mutable start = start
-        let mutable count = 0
-        let mutable number = 0
-        let mutable correctNumber = 0
+        let mutable buf = ""
         while ((start < str.Length) && ((Char.IsDigit(str.[start])))) do 
-            let temp = int (Char.GetNumericValue(str.[start]))
-            number <- number + temp * pown 10 count
-            count <- count + 1
+            buf <- buf + str.[start].ToString()
             start <- start + 1
-        let mutable degree = 0
-        while (number > 0) do
-            correctNumber <- correctNumber + (number / pown 10 (count - 1) ) * pown 10 degree
-            number <- number % pown 10 (count - 1)
-            count <- count - 1
-            degree <- degree + 1
-        (correctNumber, start)
+        let buf = int buf
+        (buf, start)
+
     while (i < str.Length) do 
         match str.[i] with
         | '(' -> 
@@ -154,9 +145,12 @@ let expressionToTreeParam (str : string, pars: (string * int) []) =
                             let mutable eval = (<=)
                             if (curPrecedence = 4) then eval <- (<)
                             let mutable stackIsEmptyFlag = false
-                            let whileCond topValue topPrecedence = 
-                                not (topValue = '(') && (eval curPrecedence topPrecedence) && not stackIsEmptyFlag
-                            while (whileCond topValue topPrecedence) do
+                            //I've tried to separate 'while' condition into function, 
+                            //but F# said that this way I'm trying to make mutable variables into constant
+                            //, and it can't allow it
+                            while topValue <> '(' && 
+                                        (eval curPrecedence topPrecedence) &&
+                                                            not stackIsEmptyFlag do
                                 uniteIntoBiggerTree topValue
 
                                 operStack.Pop
@@ -189,7 +183,8 @@ let expressionToTreeParam (str : string, pars: (string * int) []) =
 let rec calculateTree tree = 
     match tree with
     | Data (x) -> x
-    | Nil -> raise (Error ("The tree is empty, which is wrong")) //In the current state of code this error will never be raised, but let it be.
+    | Nil -> raise (Error ("The tree is empty, which is wrong")) 
+                   //In the current state of code this error will never be raised, but let it be.
     | Oper (x, l, r) ->
         let oper =  match x with
                     | '*' -> (*)
@@ -198,7 +193,8 @@ let rec calculateTree tree =
                     | '+' -> (+)
                     | '%' -> (%)
                     | '^' -> (pown)
-                    | _ -> raise (ErrorWithParam ("Unknown operator: ", x.ToString()))//In the current state of code this error will never be raised, but let it be.
+                    | _ -> raise (ErrorWithParam ("Unknown operator: ", x.ToString()))
+                            //In the current state of code this error will never be raised, but let it be.
         let a = oper (calculateTree l) (calculateTree r)
         a
 
@@ -222,8 +218,9 @@ let calculateString (str : string) (pars : (string * int) [])=
 [<TestCase ("(-19) * ((- +2) / 3) ^2", [|"unusedVariable"|], [|-1|],Result = "There can't be two operators in a row", 
     TestName = "Expression with two operators in a row")>]
 
-[<TestCase ("1 + (2 / 3 ^2", [|"unusedVariable"|], [|-1|],Result = "Not enough integer data", //'cause '(' will be considered as operator and will be put into tree, 
-    TestName = "Expression with mismatching parenthesis //no ')'")>]                         //taking '1' for itself and leaving empty stack for '+'
+[<TestCase ("1 + (2 / 3 ^2", [|"unusedVariable"|], [|-1|],Result = "Not enough integer data", //'cause '(' will be considered
+                                                                                             // as operator and will be put into tree, 
+    TestName = "Expression with mismatching parenthesis //no ')'")>]                        //taking '1' for itself and leaving empty stack for '+'
 
 [<TestCase ("1 + 2 / 3) ^2", [|"unusedVariable"|], [|-1|],Result = "Mismatching parenthesis", 
     TestName = "Expression with mismatching parenthesis //no '('")>]

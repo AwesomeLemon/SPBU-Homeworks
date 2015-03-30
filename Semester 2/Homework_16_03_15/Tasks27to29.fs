@@ -2,6 +2,7 @@
 //            by Alexander Chebykin
 
 //Task 27
+module from27to29
 open NUnit.Framework
 exception Error of string
 exception ErrorWithParam of string * string

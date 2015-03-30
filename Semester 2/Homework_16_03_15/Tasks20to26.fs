@@ -1,5 +1,6 @@
 //Different graph interfaces and implementations
 //                by Alexander Chebykin
+module from20to26
 open System
 open NUnit.Framework
 //Task 20: graph interface
@@ -64,36 +65,6 @@ let canGoTo (graph : IGraph) init =
         visited.[init] <- true
         res <- find visited init
   List.sort (res)
-
-[<Test>]
-let ``t23: No verges, Existing node`` ()= 
-  let gr = new ArrayOrgraph ([], 8)
-  let res = canGoTo gr 3
-  Assert.AreEqual (res, [])
-
-[<Test>]
-let ``t23:No verges, Non-existing node`` ()= 
-  let gr = new ArrayOrgraph([], 8)
-  let res = canGoTo gr -5
-  Assert.AreEqual (res, [])
-
-[<Test>]
-let ``t23: Usual graph, Non-existing node`` ()= 
-  let gr = new ArrayOrgraph ([(0, 1); (1, 2); (2, 3); (2, 4); (3, 4); (1, 5); (1, 6); (5, 7); (4, 5)], 8)
-  let res = canGoTo gr 30
-  Assert.AreEqual (res, [])
-
-[<Test>]
-let ``t23: Usual graph, node with nowhere to go`` ()= 
-  let gr = new ArrayOrgraph ([(0, 1); (1, 2); (2, 3); (2, 4); (3, 4); (1, 5); (1, 6); (5, 7); (4, 5)], 8)
-  let res = canGoTo gr 7
-  Assert.AreEqual (res, [])
-
-[<Test>]
-let ``t23: Usual graph, node with somewhere to go`` ()= 
-  let gr = new ArrayOrgraph ([(0, 1); (1, 2); (2, 3); (2, 4); (3, 4); (1, 5); (1, 6); (5, 7); (4, 5)], 8)
-  let res = canGoTo gr 3
-  Assert.AreEqual (res, [4; 5; 7])
 //Task 24
 let canGetFrom (graph : IGraph) init = 
 
@@ -117,6 +88,58 @@ let canGetFrom (graph : IGraph) init =
   List.sort res
 
 [<Test>]
+let ``t23: No verges, Existing node`` ()= 
+  let gr = new ArrayOrgraph ([], 8)
+  let res = canGoTo gr 3
+  Assert.AreEqual (res, [])
+
+[<Test>]
+let ``t23:No verges, Non-existing node`` ()= 
+  let gr = new ArrayOrgraph([], 8)
+  let res = canGoTo gr -5
+  Assert.AreEqual (res, [])
+
+[<TestFixture>]
+type UsualGraph () = 
+  let ar = [(0, 1); (1, 2); (2, 3); (2, 4); (3, 4); (1, 5); (1, 6); (5, 7); (4, 5)]
+  let createUsGr = new ArrayOrgraph (ar, 8)
+  [<Test>]
+    member self.``t23: Usual graph, Non-existing node`` ()= 
+      let gr = createUsGr
+      let res = canGoTo gr 30
+      Assert.AreEqual (res, [])
+
+  [<Test>]
+    member self.``t23: Usual graph, node with nowhere to go`` ()= 
+      let gr = createUsGr
+      let res = canGoTo gr 7
+      Assert.AreEqual (res, [])
+
+  [<Test>]
+    member self.``t23: Usual graph, node with somewhere to go`` ()= 
+      let gr = createUsGr
+      let res = canGoTo gr 3
+      Assert.AreEqual (res, [4; 5; 7])
+
+  [<Test>]
+    member self.``t24: Usual graph, Non-existing node`` ()= 
+      let gr = createUsGr
+      let res = canGetFrom gr 30
+      Assert.AreEqual (res, [])
+
+  [<Test>]
+    member self.``t24: Usual graph, node with nowhere to get from`` ()= 
+      let gr = createUsGr
+      let res = canGetFrom gr 0
+      Assert.AreEqual (res, [])
+
+  [<Test>]
+    member self.``t24: Usual graph, node with somewhere to get from`` ()= 
+      let gr = createUsGr
+      let res = canGetFrom gr 3
+      Assert.AreEqual (res, [0; 1; 2])
+
+[<Test>]
 let ``t24: No verges, Existing node`` ()= 
   let gr = new ListOrgraph([], 8)
   let res = canGetFrom gr 3
@@ -127,24 +150,6 @@ let ``t24: No verges, Non-existing node`` ()=
   let gr = new ListOrgraph([], 8)
   let res = canGetFrom gr -5
   Assert.AreEqual (res, [])
-
-[<Test>]
-let ``t24: Usual graph, Non-existing node`` ()= 
-  let gr = new ListOrgraph([(0, 1); (1, 2); (2, 3); (2, 4); (3, 4); (1, 5); (1, 6); (5, 7); (4, 5)], 8)
-  let res = canGetFrom gr 30
-  Assert.AreEqual (res, [])
-
-[<Test>]
-let ``t24: Usual graph, node with nowhere to get from`` ()= 
-  let gr = new ListOrgraph([(0, 1); (1, 2); (2, 3); (2, 4); (3, 4); (1, 5); (1, 6); (5, 7); (4, 5)], 8)
-  let res = canGetFrom gr 0
-  Assert.AreEqual (res, [])
-
-[<Test>]
-let ``t24: Usual graph, node with somewhere to get from`` ()= 
-  let gr = new ListOrgraph([(0, 1); (1, 2); (2, 3); (2, 4); (3, 4); (1, 5); (1, 6); (5, 7); (4, 5)], 8)
-  let res = canGetFrom gr 3
-  Assert.AreEqual (res, [0; 1; 2])
 // task 26
 type Computer(os)=
   class
@@ -192,7 +197,9 @@ type MyRandom() =
 
 type Net(verges: (int * int) list, numberOfNods, OSs :string[]) = 
   class
-    inherit ArrayOrgraphMarked<Computer> (verges, numberOfNods, [| for i in 0 .. OSs.Length - 1 -> new Computer(OSs.[i]) |], [| for i in 0 .. OSs.Length - 1 -> i |])
+    inherit ArrayOrgraphMarked<Computer> (verges, numberOfNods, 
+        [| for i in 0 .. OSs.Length - 1 -> new Computer(OSs.[i]) |], [| for i in 0 .. OSs.Length - 1 -> i |])
+
     member self.PrintInfection = 
       for i = 0 to numberOfNods - 1 do
         printf "%i " ((self  :> IGraphMarked<Computer>).ValAt i).Infection
@@ -246,12 +253,71 @@ let netTest (randVal, start, moves) =
     net.emulateNextStep randVal
   net.InfectionToArray
 
+(*
+   Windows    Linux         OS X
+*)
+[<TestCase(0, 1, 1, Result = [|0; 2; 0|],
+    TestName = "t26: Infection probability is 100%, graph with no verges, 1 move from node 1")>]
+[<TestCase(0, 1, 100, Result = [|0; 2; 0|],
+    TestName = "t26: Infection probability is 100%, graph with no verges, 100 moves from node 1")>]
+[<TestCase(0, 0, 100, Result = [|2; 0; 0|],
+    TestName = "t26: Infection probability is 100%, graph with no verges, 100 moves from node 0")>]
+let netTest2 (randVal, start, moves) =
+  let mutable net = new Net ([], 3, [|"Windows"; "Linux"; "OS X"|])
+  ((net :> IGraphMarked<Computer>).ValAt start).ChangeInfection 2 
+  for i = 0 to moves - 1 do
+    net.emulateNextStep randVal
+  net.InfectionToArray
 
+(*
+    0.Unknown <---- 1. Unknown <---- 2.Unknown
+                         /\
+                          |
+                          |
+                     3. Unknown                         4. Windows -----> 5.Linux
+*)
+//In this tests two (or one) starting points will be tested
+[<TestCase(0, 3, 3, 1, Result = [|0; 2; 0; 2; 0; 0|], 
+        TestName = "t26: 2 connected components; Infection probability is 100%, Starting point 3, 1 move")>]
 
-[<EntryPoint>]
+[<TestCase(0, 2, 3, 1, Result = [|0; 2; 2; 2; 0; 0|], 
+        TestName = "t26: 2 connected components; Infection probability is 100%, Starting point 3 & 2, 1 move")>]
+
+[<TestCase(1, 3, 3, 1, Result = [|0; 0; 0; 2; 0; 0|], 
+        TestName = "t26: 2 connected components; Infection probability is 0%, Starting point 3, 1 move")>]
+
+[<TestCase(1, 2, 3, 1, Result = [|0; 0; 2; 2; 0; 0|], 
+        TestName = "t26: 2 connected components; Infection probability is 0%, Starting point 3 & 2, 1 move")>]
+
+[<TestCase(0, 3, 3, 100, Result = [|2; 2; 0; 2; 0; 0|], 
+        TestName = "t26: 2 connected components; Infection probability is 100%, Starting point 3, 100 moves")>]
+
+[<TestCase(0, 2, 3, 100, Result = [|2; 2; 2; 2; 0; 0|], 
+        TestName = "t26: 2 connected components; Infection probability is 100%, Starting point 3 & 2, 100 moves")>]
+
+[<TestCase(1, 3, 3, 100, Result = [|0; 0; 0; 2; 0; 0|], 
+        TestName = "t26: 2 connected components; Infection probability is 0%, Starting point 3, 100 moves")>]
+
+[<TestCase(1, 2, 3, 100, Result = [|0; 0; 2; 2; 0; 0|], 
+        TestName = "t26: 2 connected components; Infection probability is 0%, Starting point 3 & 2, 100 moves")>]
+
+[<TestCase(0, 4, 4, 100, Result = [|0; 0; 0; 0; 2; 2|], 
+        TestName = "t26: 2 connected components; Infection probability is 100%, Starting point 4, 100 moves")>]
+
+[<TestCase(1, 4, 4, 100, Result = [|0; 0; 0; 0; 2; 0|], 
+        TestName = "t26: 2 connected components; Infection probability is 0%, Starting point 4, 100 moves")>]
+let netTest3 (randVal, start, start2, moves) =
+  let mutable net = new Net ([(1, 0); (2, 1); (3, 1); (4, 5)], 
+                             6, [|"Unknown"; "Unknown"; "Unknown"; "Unknown"; "Windows"; "Linux"|])
+  ((net :> IGraphMarked<Computer>).ValAt start2).ChangeInfection 2 
+  ((net :> IGraphMarked<Computer>).ValAt start).ChangeInfection 2 
+  for i = 0 to moves - 1 do
+    net.emulateNextStep randVal
+  net.InfectionToArray
+(*[<EntryPoint>]
 let main argv = 
   printfn "Controls: press any key for the next move; press 'Esc' to quit."
-  let mutable net = new Net ([(0, 1); (1, 2); (2, 3); (2, 4); (3, 5); (5, 4); (1, 6); (6, 4); (6, 7)], 8, [|"Windows"; "Linux"; "OS X"; "Linux"; "Unknown"; "Windows"; "Windows"; "OS X"|])
+  let mutable net = new Net ([(0, 1); (1, 2); (2, 3); (2, 4); (3, 5); (5, 4); (1, 6); (6, 4); (6, 7)], 8, 
+          [|"Windows"; "Linux"; "OS X"; "Linux"; "Unknown"; "Windows"; "Windows"; "OS X"|])
   ((net :> IGraphMarked<Computer>).ValAt 0).ChangeInfection 2 
-  
-  0
+  0*)
