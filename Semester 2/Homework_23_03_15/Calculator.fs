@@ -14,13 +14,15 @@ type stack<'A> () =
         member self.Pop =
             match st with
             | [] -> 
-                raise(Error( "Pop: Empty Stack"))//In the current state of code this error will never be raised, but let it be.
+                raise(Error( "Pop: Empty Stack"))
+                    //In the current state of code this error will never be raised, but let it be.
             | x :: l ->
                 st <- l
         member self.Top =
             match st with
             | [] -> 
-                raise (Error ( "Top: Empty Stack"))//In the current state of code this error will never be raised, but let it be.
+                raise (Error ( "Top: Empty Stack"))
+                    //In the current state of code this error will never be raised, but let it be.
             | x :: l ->
                 x
         member self.IsEmpty = 
@@ -106,7 +108,8 @@ let expressionToTreeParam (str : string, pars: (string * int) []) =
                                          res <- snd pars.[k]
                                          noSuchVarFlag <- false
                                          isScanningOverFlag <- true
-                                   if (noSuchVarFlag) then raise(ErrorWithParam("There's no such variable as ", buf))
+                                   if (noSuchVarFlag) then 
+                                      raise(ErrorWithParam("There's no such variable as ", buf))
                                 else
                                     raise (Error ("There can't be two operators in a row"))
                 | _ -> mayBeNumberFlag <- false
@@ -136,7 +139,7 @@ let expressionToTreeParam (str : string, pars: (string * int) []) =
                 let isOperator elem =  
                     match elem with
                     | (a, _) -> 
-                      if (str.[j] = a) then true else false
+                      str.[j] = a
 
                 if (Array.exists isOperator operations) then
                     let a = Array.findIndex isOperator operations
@@ -151,7 +154,9 @@ let expressionToTreeParam (str : string, pars: (string * int) []) =
                             let mutable eval = (<=)
                             if (curPrecedence = 4) then eval <- (<)
                             let mutable stackIsEmptyFlag = false
-                            while not (topValue = '(') && (eval curPrecedence topPrecedence) && not stackIsEmptyFlag do
+                            let whileCond topValue topPrecedence = 
+                                not (topValue = '(') && (eval curPrecedence topPrecedence) && not stackIsEmptyFlag
+                            while (whileCond topValue topPrecedence) do
                                 uniteIntoBiggerTree topValue
 
                                 operStack.Pop
