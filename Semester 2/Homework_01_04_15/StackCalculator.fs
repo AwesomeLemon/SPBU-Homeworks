@@ -51,29 +51,28 @@ let expressionToOPN (str : string) =
         match str.[i] with
         | '(' -> 
             operStack.Push ('(', -1)
-            let mutable j = i + 1
+            i <- i + 1
             let mutable mayBeNumberFlag = true
             let mutable isScanningOverFlag = false
             let mutable res = ""
-            while (j < str.Length) && mayBeNumberFlag && not isScanningOverFlag do
-                match str.[j] with
-                | ' ' -> j <- j + 1
+            while (i < str.Length) && mayBeNumberFlag && not isScanningOverFlag do
+                match str.[i] with
+                | ' ' -> i <- i + 1
                 | '-' ->
-                    j <- j + 1
+                    i <- i + 1
                     
-                    while (j < str.Length) && not isScanningOverFlag do
-                        match str.[j] with
-                        | ' ' -> j <- j + 1
+                    while (i < str.Length) && not isScanningOverFlag do
+                        match str.[i] with
+                        | ' ' -> i <- i + 1
                         | _ -> 
-                            if (Char.IsDigit(str.[j])) then
-                               while (j < str.Length) && (Char.IsDigit(str.[j])) do
-                                       res <- res + str.[j].ToString()
-                                       j <- j + 1
+                            if (Char.IsDigit(str.[i])) then
+                               while (i < str.Length) && (Char.IsDigit(str.[i])) do
+                                       res <- res + str.[i].ToString()
+                                       i <- i + 1
                                isScanningOverFlag <- true
                             else
                                 raise (Error ("There can't be two operators in a row"))
                 | _ -> mayBeNumberFlag <- false
-            i <- j
             if (mayBeNumberFlag) then out <- out + "-" + res + "\r\n"    
         | ')' ->
             try
@@ -210,7 +209,6 @@ let fileToTree (fIn : string) =
       if (isOperator buf.[0]) then
         if (buf.[0] = '-') && (buf.Length > 1) then
           if Char.IsDigit(buf.[1]) then
-            let a = - (stringPartToInt buf 1)
             out.Push (Data(- (stringPartToInt buf 1)))
           else
             raise (Error("Bad input"))
@@ -257,12 +255,15 @@ let testTask37 (fIn : string) (fOut : string)(fRes : string) (expr : string) =
   let trueRes = trueOut.ReadToEnd ()
   Assert.AreEqual (res, trueRes)
 
+//The expressions are opn representations of expressions in tests for task 37
 [<TestCase ("opn1.txt", "data1.txt", "1", TestName = "T38: Usual 1")>]
 [<TestCase ("opn2.txt", "data2.txt", "-4999", TestName = "T38: Usual 2")>]
 [<TestCase ("opn3.txt", "data3.txt", "-14", TestName = "T38: Usual 3")>]
 [<TestCase ("opn4.txt", "data4.txt", "448", TestName = "T38: Usual 4")>]
-[<TestCase ("opn5.txt", "data5.txt", "Error: There can't be two operators in a row", TestName = "T38: Two operators in a row")>]
-[<TestCase ("opn6.txt", "data6.txt", "Error: Mismatching parenthesis", TestName = "T38: Mismatching parenthesis// no '('")>]
+[<TestCase ("opn5.txt", "data5.txt", "Error: There can't be two operators in a row", 
+      TestName = "T38: Two operators in a row")>]
+[<TestCase ("opn6.txt", "data6.txt", "Error: Mismatching parenthesis", 
+      TestName = "T38: Mismatching parenthesis// no '('")>]
 [<TestCase ("opn7.txt", "data7.txt", "Error: Mismatching parenthesis", 
       TestName = "T38: Mismatching parenthesis// ')' as the first symbol")>]
 [<TestCase ("opn8.txt", "data8.txt", "Error: Unsupported symbol in the input", 
