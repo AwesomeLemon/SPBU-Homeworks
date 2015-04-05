@@ -206,6 +206,12 @@ let calculateString (str : string) (pars : (string * int) [])=
     | ErrorWithParam(msg, param) -> (msg + param)
 //TestCase doesn't like arrays of pairs. And empty arrays. 
 //So when there're no variables, I'll be passing to it "unusedVariable" with value "-1", so it will work.
+[<TestCase ("3 ^ 1 ^ 2", [|"unusedVariable"|], [|-1|],Result = "3", 
+    TestName = "Right association of '^' ")>]
+
+[<TestCase ("1 -2 - 3", [|"unusedVariable"|], [|-1|],Result = "-4", 
+    TestName = "Expression without variables 0")>]
+
 [<TestCase ("(34 + 81) * 59 / 134 - (35 - 31) ^ 3", [|"unusedVariable"|], [|-1|],Result = "-14", 
     TestName = "Expression without variables 1")>]
 
