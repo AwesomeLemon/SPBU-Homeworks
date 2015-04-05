@@ -231,6 +231,8 @@ let calculateOPNFile (fIn : string) (fOut : string)=
     use output = new IO.StreamWriter (fOut)
     output.Write (res)
 
+
+[<TestCase ("in0.txt", "opn0.txt", "res0.txt", "1 -2 - 3", TestName = "Usual 0")>]
 [<TestCase ("in1.txt", "opn1.txt", "res1.txt", "1 + (2 / 3) ^2", TestName = "Usual 1")>]
 [<TestCase ("in2.txt", "opn2.txt", "res2.txt", "17 - 456 * 11", TestName = "Usual 2")>]
 [<TestCase ("in3.txt", "opn3.txt", "res3.txt", "(34 + 81) * 59 / 134 - (35 - 31) ^ 3", TestName = "Usual 3")>]
@@ -241,6 +243,7 @@ let calculateOPNFile (fIn : string) (fOut : string)=
       TestName = "Mismatching parenthesis// ')' as the first symbol")>]
 [<TestCase ("in8.txt", "opn8.txt", "res8.txt", "(98 /3)*(-4)^2 + ((-64)&  5) ^ 3", 
       TestName = "Unsupported symbol in the input")>]
+[<TestCase ("in9.txt", "opn9.txt", "res9.txt", "3 ^ 1 ^ 2", TestName = "Right association of '^' ")>]
 
 let testTask37 (fIn : string) (fOut : string)(fRes : string) (expr : string) = 
   let input = new IO.StreamWriter (fIn)
@@ -256,6 +259,7 @@ let testTask37 (fIn : string) (fOut : string)(fRes : string) (expr : string) =
   Assert.AreEqual (res, trueRes)
 
 //The expressions are opn representations of expressions in tests for task 37
+[<TestCase ("opn0.txt", "data0.txt", "-4", TestName = "T38: Usual 0")>]
 [<TestCase ("opn1.txt", "data1.txt", "1", TestName = "T38: Usual 1")>]
 [<TestCase ("opn2.txt", "data2.txt", "-4999", TestName = "T38: Usual 2")>]
 [<TestCase ("opn3.txt", "data3.txt", "-14", TestName = "T38: Usual 3")>]
@@ -268,6 +272,7 @@ let testTask37 (fIn : string) (fOut : string)(fRes : string) (expr : string) =
       TestName = "T38: Mismatching parenthesis// ')' as the first symbol")>]
 [<TestCase ("opn8.txt", "data8.txt", "Error: Unsupported symbol in the input", 
       TestName = "T38: Unsupported symbol in the input")>]
+[<TestCase ("opn9.txt", "data9.txt", "3", TestName = "T38: Right association of '^'")>]
 
 let testTask38 (fIn : string) (fOut : string) (trueRes : string) = 
   calculateOPNFile fIn fOut
