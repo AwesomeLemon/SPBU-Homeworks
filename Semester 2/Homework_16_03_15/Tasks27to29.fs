@@ -1,7 +1,11 @@
-﻿//Interfaces and different implementatiuons of polymorphal list
+﻿//Interfaces and different implementatiuons of polymorphal list and lots of tests for them
 //            by Alexander Chebykin
 
 //Task 27
+module from27to29
+open NUnit.Framework
+exception Error of string
+exception ErrorWithParam of string * string
 type IMyList<'A when 'A: equality> = 
   interface
     abstract AddFront : 'A -> unit
@@ -53,27 +57,27 @@ type ATDList<'A when 'A : equality> (l) =
               match list with
               | Nil -> Cons (x, Nil)
               | Cons (a, t) -> Cons (a, addAt (count - 1) x t)
-
-        list <- addAt (index - 1) value list
+        if (index >= 0) then 
+            list <- addAt (index) value list
 
       override self.DelFront =
         let a = match list with
-                | Nil -> Nil
+                | Nil -> raise (Error ("There's no first value"))
                 | Cons (x, l) -> l
 
         list <- a
 
       override self.Pop =
         let (a, b) = match list with
-                | Nil -> failwith "There's no frist value"
-                | Cons (x, l) -> x, l
+                     | Nil -> raise (Error ("There's no first value"))
+                     | Cons (x, l) -> x, l
         list <- b
         a
 
       override self.DelBack = 
         let rec delBack list =
           match list with
-          | Nil -> Nil
+          | Nil -> raise (Error ("There's no last value (the list is empty"))
           | Cons (x, Nil) -> Nil
           | Cons (x, l) -> Cons (x, delBack l)
 
@@ -85,14 +89,14 @@ type ATDList<'A when 'A : equality> (l) =
             then
               match list with
               | Cons (a, Cons (b, l)) -> Cons (b,l)
-              | Cons (a, Nil) -> failwith "Nothing to delete"
-              | Nil -> Nil
+              | Cons (a, Nil) -> Nil
+              | Nil -> raise (ErrorWithParam ("DelAt: There's no such index in the list: ", index.ToString()))
             else
               match list with
-              | Nil -> Nil
+              | Nil -> raise (ErrorWithParam ("DelAt: There's no such index in the list: ", index.ToString()))
               | Cons (a, t) -> Cons (a, delAt (count - 1) t)
 
-        list <- delAt (index - 1) list
+        list <- delAt index list
 
       override self.Find value =
         let rec find x list =
@@ -117,7 +121,7 @@ type ArrayList<'A when 'A : equality> (ar : 'A[], n) =
   class
     let mutable array = ar
     let mutable last = n
-    let IncreaseNum = 9 // Number of elemnts by which we shall expand array at one time
+    let IncreaseNum = 9 // Number of elements by which we shall expand array at one time
     member self.Print =
       printfn "%A" array
     member self.Self = array
@@ -130,82 +134,544 @@ type ArrayList<'A when 'A : equality> (ar : 'A[], n) =
         array <- Array.append array [|value|]
         last <- last + 1
       override self.AddAt index value =
-        array <- Array.append (Array.append array.[0..index-1] [|value|]) array.[index..array.Length-1]
-        last <- last + 1
+        if (index <= last + 1) && (index >= 0) then
+            array <- Array.append (Array.append array.[0..index-1] [|value|]) array.[index..array.Length-1]
+            last <- last + 1
       override self.DelFront =
-        array <- array.[1..array.Length - 1]
-        last <- last - 1
+        if not((self :> IMyList<'A>).IsEmpty) then
+            array <- array.[1..array.Length - 1]
+            last <- last - 1
+        else raise (Error ("There's no first value"))
       override self.Pop =
+        if (self :> IMyList<'A>).IsEmpty then raise (Error ("There's no first value"))
         let res = array.[0]
         array <- array.[1..array.Length - 1]
         last <- last - 1
         res
       override self.DelBack =
-        array <- array.[0..array.Length - 2]
-        last <- last - 1
-      override self.DelAt index =
-        if (index < 0 || index > last) 
-          then failwith "There's no such element"
-          else
-            array <- Array.append array.[0..index - 1] array.[index + 1..array.Length - 1]
+        if not((self :> IMyList<'A>).IsEmpty) then
+            array <- array.[0..array.Length - 2]
             last <- last - 1
+        else raise (Error ("There's no last value (the list is empty"))
+      override self.DelAt index =
+        if (index = 0 && index <= last) then 
+            (self :> IMyList<'A>).DelFront
+        else
+            if (index > 0 && index <= last) then 
+                array <- Array.append array.[0..index - 1] array.[index + 1..array.Length - 1]
+                last <- last - 1
+            else raise (ErrorWithParam ("DelAt: There's no such index in the list: ", index.ToString()))
       override self.Find value =
         Array.exists (fun elem -> elem = value) array
       override self.Concat list2 =
         while not(list2.IsEmpty) do
           (self :> IMyList<'A>).AddBack list2.Pop
-     //   ArrayList<'A> (Array.append array ((list2 :?> ArrayList<'A>).Self), last + (list2 :?> ArrayList<'A>).Last + 1) :> IMyList<'A>
       override self.IsEmpty =
         match last with
         | -1 -> true
         | _ -> false
   end
-[<EntryPoint>]
-let main argv =
-  //task 28
-  printfn "ATD implementation"
-  let list = new ATDList<int> (Cons (1, Cons (2, Cons (3, Nil))))
-  let list2 = new ATDList<int> (Cons (4, Cons (5, Cons (6, Nil))))
-  printfn "Initial list: "
-  list.Print
-  printfn "Adding 17 at the front, 12 to the 3rd(counting from 1) position, and 90 at the back: "
+
+//Array implementation:
+//AddFront
+[<Test>]
+let ``Adding at front of zero list`` () = 
+  let list = new ArrayList<int> ([||], -1)
   (list :> IMyList<int>).AddFront 17
-  (list :> IMyList<int>).AddBack 90
-  (list :> IMyList<int>).AddAt 3 12
-  list.Print
-  printfn "Concatenating with list2 = [4; 5; 6]"
-  (list :> IMyList<int>).Concat list2
-  list.Print
-  printfn "Deleting at the front and at the back"
-  (list :> IMyList<int>).DelFront
-  (list :> IMyList<int>).DelBack
-  list.Print
-  printfn "Deleting at 4th position (counting from 1)"
-  (list :> IMyList<int>).DelAt 4
-  list.Print
-  printfn "it is %A that 12 is in the list, and it is %A that 17 is in the list" 
-    ((list :> IMyList<int>).Find 12) ((list :> IMyList<int>).Find 17)
-  //task 29
-  printfn "Array implementation"
+  Assert.AreEqual(list.Self, [|17|])
+
+[<Test>]
+let ``Adding at front of non-zero list`` () = 
   let list = new ArrayList<int> ([|1; 2; 3;|], 2)
-  let list2 = new ArrayList<int> ([|4; 5; 6;|], 2)
-  printfn "Initial list: "
-  list.Print
-  printfn "Adding 17 at the front, 12 to the 3rd(counting from 1) position, and 90 at the back: "
   (list :> IMyList<int>).AddFront 17
-  (list :> IMyList<int>).AddBack 90
-  (list :> IMyList<int>).AddAt (3 - 1) 12
-  list.Print
-  printfn "Concatenating with list2 = [4; 5; 6]"
-  (list :> IMyList<int>).Concat list2
-  list.Print
-  printfn "Deleting at the front and at the back"
+  Assert.AreEqual(list.Self, [|17; 1; 2; 3|])
+
+[<Test>]
+let ``Adding at front of non-zero list twice`` () = 
+  let list = new ArrayList<int> ([|1; 2; 3;|], 2)
+  (list :> IMyList<int>).AddFront 17
+  (list :> IMyList<int>).AddFront 49
+  Assert.AreEqual(list.Self, [|49; 17; 1; 2; 3|])
+//AddBack
+[<Test>]
+let ``Adding at back of zero list`` () = 
+  let list = new ArrayList<int> ([||], -1)
+  (list :> IMyList<int>).AddBack 17
+  Assert.AreEqual(list.Self, [|17|])
+[<Test>]
+let ``Adding at back of non-zero list`` () = 
+  let list = new ArrayList<int> ([|1; 2; 3;|], 2)
+  (list :> IMyList<int>).AddBack 17
+  Assert.AreEqual(list.Self, [|1; 2; 3; 17|])
+
+[<Test>]
+let ``Adding at back of non-zero list twice`` () = 
+  let list = new ArrayList<int> ([|1; 2; 3;|], 2)
+  (list :> IMyList<int>).AddBack 17
+  (list :> IMyList<int>).AddBack 49
+  Assert.AreEqual(list.Self, [|1; 2; 3; 17; 49|])
+//AddAt
+[<Test>]
+let ``Adding at 0 position of zero list`` () = 
+  let list = new ArrayList<int> ([||], -1)
+  (list :> IMyList<int>).AddAt 0 17
+  Assert.AreEqual(list.Self, [|17|])
+
+[<Test>]
+let ``Adding at 5 position of zero list`` () = 
+  let list = new ArrayList<int> ([||], -1)
+  (list :> IMyList<int>).AddAt 5 17
+  Assert.AreEqual(list.Self, [||])
+
+[<Test>]
+let ``Adding at 1 existing and 1 non-existing position of non-zero list`` () = 
+  let list = new ArrayList<int> ([|1; 2; 3;|], 2)
+  (list :> IMyList<int>).AddAt 1 17
+  (list :> IMyList<int>).AddAt -3 78
+  Assert.AreEqual(list.Self, [|1; 17; 2; 3|])
+[<Test>]
+let ``Adding at 2 existing positions of non-zero list`` () = 
+  let list = new ArrayList<int> ([|1; 2; 3; 4; 5; 6; 189; 1|], 7)
+  (list :> IMyList<int>).AddAt 1 17
+  (list :> IMyList<int>).AddAt 3 78
+  Assert.AreEqual(list.Self, [|1; 17; 2; 78; 3; 4; 5; 6; 189; 1|])
+//DelFront
+[<Test>]
+let ``Deleting at front of zero list`` () = 
+  let list = new ArrayList<int> ([||], -1)
+  let mutable res = ""
+  try
+     (list :> IMyList<int>).DelFront
+     res <- list.Self.ToString ()
+  with
+  | Error (msg) -> 
+        printf "%A" (msg)
+        res <- msg
+  Assert.AreEqual(res, "There's no first value")
+
+[<Test>]
+let ``Deleting at front of non-zero list`` () = 
+  let list = new ArrayList<int> ([|1; 2; 3;|], 2)
   (list :> IMyList<int>).DelFront
+  Assert.AreEqual(list.Self, [|2; 3|])
+
+[<Test>]
+let ``Deleting at front of list of 1 element twice`` () = 
+  let list = new ArrayList<int> ([|1|], 0)
+  let mutable res = ""
+  try
+     (list :> IMyList<int>).DelFront
+     (list :> IMyList<int>).DelFront
+     res <- list.Self.ToString ()
+  with
+  | Error (msg) -> 
+        printf "%A" (msg)
+        res <- msg
+  Assert.AreEqual(res, "There's no first value")
+
+//DelBack
+[<Test>]
+let ``Deleting at back of zero list`` () = 
+  let list = new ArrayList<int> ([||], -1)
+  let mutable res = ""
+  try
+     (list :> IMyList<int>).DelBack
+     res <- list.Self.ToString ()
+  with
+  | Error (msg) -> 
+        printf "%A" (msg)
+        res <- msg
+  Assert.AreEqual(res, "There's no last value (the list is empty")
+
+[<Test>]
+let ``Deleting at back of non-zero list`` () = 
+  let list = new ArrayList<int> ([|1; 2; 3;|], 2)
   (list :> IMyList<int>).DelBack
-  list.Print
-  printfn "Deleting at 4th position (counting from 1)"
-  (list :> IMyList<int>).DelAt (4 - 1)
-  list.Print
-  printfn "it is %A that 17 is in the list, and it is %A that 12 is in the list" 
-    ((list :> IMyList<int>).Find 17) ((list :> IMyList<int>).Find 12)
+  Assert.AreEqual(list.Self, [|1; 2|])
+
+[<Test>]
+let ``Deleting at back of list of 1 element twice`` () = 
+  let list = new ArrayList<int> ([|1|], 0)
+  let mutable res = ""
+  try
+     (list :> IMyList<int>).DelBack
+     (list :> IMyList<int>).DelBack
+     res <- list.Self.ToString ()
+  with
+  | Error (msg) -> 
+        printf "%A" (msg)
+        res <- msg
+  Assert.AreEqual(res, "There's no last value (the list is empty")
+
+//DelAt
+[<Test>]
+let ``Deleting at 0 position of zero list`` () = 
+  let list = new ArrayList<int> ([||], -1)
+  let mutable res = ""
+  try
+     (list :> IMyList<int>).DelAt 0 
+     res <- list.Self.ToString ()
+  with
+  | ErrorWithParam (msg, param) -> 
+        printf "%A" (msg + param)
+        res <- msg + param
+  Assert.AreEqual(res, "DelAt: There's no such index in the list: 0")
+
+[<Test>]
+let ``Deleting at 0 position of non-zero list`` ()= 
+  let list = new ArrayList<int> ([|1; 2; 3;|], 2)
+  (list :> IMyList<int>).DelAt 0
+  Assert.AreEqual(list.Self, [|2; 3|])
+
+[<Test>]
+let ``Deleting at 5 position of zero list`` () = 
+  let list = new ArrayList<int> ([||], -1)
+  let mutable res = ""
+  try
+     (list :> IMyList<int>).DelAt 5
+     res <- list.Self.ToString ()
+  with
+  | ErrorWithParam (msg, param) -> 
+        printf "%A" (msg + param)
+        res <- msg + param
+  Assert.AreEqual(res, "DelAt: There's no such index in the list: 5")
+[<Test>]
+let ``Deleting at 1 existing and 1 non-existing position of non-zero list`` () = 
+  let list = new ArrayList<int> ([|1; 2; 3;|], 2)
+  let mutable res = ""
+  try
+     (list :> IMyList<int>).DelAt 1
+     (list :> IMyList<int>).DelAt -3
+     res <- list.Self.ToString ()
+  with
+  | ErrorWithParam (msg, param) -> 
+        printf "%A" (msg + param)
+        res <- msg + param
+  Assert.AreEqual(res, "DelAt: There's no such index in the list: -3")
+
+[<Test>]
+let ``Deleting at 2 existing positions of non-zero list`` () = 
+  let list = new ArrayList<int> ([|1; 2; 3; 4; 5; 6; 189; 1|], 7)
+  (list :> IMyList<int>).DelAt 2
+  (list :> IMyList<int>).DelAt 0
+  Assert.AreEqual(list.Self, [|2; 4; 5; 6; 189; 1|])
+//Find
+[<Test>]
+let ``Find something in zero list`` () = 
+  let list = new ArrayList<int> ([||], -1)
+  let res = (list :> IMyList<int>).Find 17
+  Assert.AreEqual(res, false)
+[<Test>]
+let ``Find non-existant (in this list) value in non-zero list`` () = 
+  let list = new ArrayList<int> ([|1; 2; 4|], 2)
+  let res = (list :> IMyList<int>).Find 17
+  Assert.AreEqual(res, false)
+[<Test>]
+let ``Find existant (in this list) value in non-zero list`` () = 
+  let list = new ArrayList<int> ([|1; 2; 4; 178423; 43; 2323; 2; 1; 1010|], 8)
+  let res = (list :> IMyList<int>).Find 43
+  Assert.AreEqual(res, true)
+//Concat
+[<Test>]
+let ``Concating to zero Arraylist zero ATDList`` () = 
+  let list = new ArrayList<int> ([||], -1)
+  let list2 = new ATDList<int> (Nil)
+  (list :> IMyList<int>).Concat list2
+  Assert.AreEqual(list.Self, [||])
+[<Test>]
+let ``Concating to zero Arraylist non-zero ATDList`` () = 
+  let list = new ArrayList<int> ([||], -1)
+  let list2 = new ATDList<int> (Cons (4, Cons (5, Cons (6, Nil))))
+  (list :> IMyList<int>).Concat list2
+  Assert.AreEqual(list.Self, [|4; 5; 6|])
+[<Test>]
+let ``Concating to non-zero Arraylist non-zero ATDList`` () = 
+  let list = new ArrayList<int> ([|17; 893; 122; 12312312; 1|], 4)
+  let list2 = new ATDList<int> (Cons (4, Cons (5, Cons (6, Nil))))
+  (list :> IMyList<int>).Concat list2
+  Assert.AreEqual(list.Self, [|17; 893; 122; 12312312; 1; 4; 5; 6|])
+[<Test>]
+let ``Concating to non-zero Arraylist zero ATDList`` () = 
+  let list = new ArrayList<int> ([|17; 893; 122; 12312312; 1|], 4)
+  let list2 = new ATDList<int> (Nil)
+  (list :> IMyList<int>).Concat list2
+  Assert.AreEqual(list.Self, [|17; 893; 122; 12312312; 1|])
+[<Test>]
+let ``Concating two zero Arraylists`` () = 
+  let list = new ArrayList<int> ([||], -1)
+  let list2 = new ArrayList<int> ([||], -1)
+  (list :> IMyList<int>).Concat list2
+  Assert.AreEqual(list.Self, [||])
+[<Test>]
+let ``Concating two non-zero Arraylists`` () = 
+  let list = new ArrayList<int> ([|1; 2|], 1)
+  let list2 = new ArrayList<int> ([|17; 85; 48; -635|], 3)
+  (list :> IMyList<int>).Concat list2
+  Assert.AreEqual(list.Self, [|1; 2; 17; 85; 48; -635|])
+[<Test>]
+let ``Concating to zero Arraylist non-zero ArrayList`` () = 
+  let list = new ArrayList<int> ([||], -1)
+  let list2 = new ArrayList<int> ([|17; 85; 48; -635|], 3)
+  (list :> IMyList<int>).Concat list2
+  Assert.AreEqual(list.Self, [|17; 85; 48; -635|])
+[<Test>]
+let ``Concating to non-zero Arraylist zero ArrayList`` () = 
+  let list = new ArrayList<int> ([||], -1)
+  let list2 = new ArrayList<int> ([|17; 85; 48; -635|], 3)
+  (list2 :> IMyList<int>).Concat list
+  Assert.AreEqual(list2.Self, [|17; 85; 48; -635|])
+
+
+
+//ATD implementation
+
+//AddFront
+[<Test>]
+let ``ATD: Adding at front of zero list`` () = 
+  let list = new ATDList<int> (Nil)
+  (list :> IMyList<int>).AddFront 17
+  Assert.AreEqual(list.Self, Cons(17, Nil))
+
+[<Test>]
+let ``ATD: Adding at front of non-zero list`` () = 
+  let list = new ATDList<int> (Cons (1, Cons(2, Cons (3, Nil))))
+  (list :> IMyList<int>).AddFront 17
+  Assert.AreEqual(list.Self, Cons (17, Cons (1, Cons(2, Cons (3, Nil)))))
+
+[<Test>]
+let ``ATD: Adding at front of non-zero list twice`` () = 
+  let list = new ATDList<int> (Cons (1, Cons(2, Cons (3, Nil))))
+  (list :> IMyList<int>).AddFront 17
+  (list :> IMyList<int>).AddFront 49
+  Assert.AreEqual(list.Self, Cons (49, Cons (17, Cons (1, Cons(2, Cons (3, Nil))))))
+//AddBack
+[<Test>]
+let ``ATD: Adding at back of zero list`` () = 
+  let list = new ATDList<int> (Nil)
+  (list :> IMyList<int>).AddBack 17
+  Assert.AreEqual(list.Self, Cons(17, Nil))
+[<Test>]
+let ``ATD: Adding at back of non-zero list`` () = 
+  let list = new ATDList<int> (Cons (1, Cons(2, Cons (3, Nil))))
+  (list :> IMyList<int>).AddBack 17
+  Assert.AreEqual(list.Self, Cons (1, Cons(2, Cons (3, Cons (17, Nil)))))
+
+[<Test>]
+let ``ATD: Adding at back of non-zero list twice`` () = 
+  let list = new ATDList<int> (Cons (1, Cons(2, Cons (3, Nil))))
+  (list :> IMyList<int>).AddBack 17
+  (list :> IMyList<int>).AddBack 49
+  Assert.AreEqual(list.Self, Cons (1, Cons(2, Cons (3, Cons (17, Cons (49, Nil))))))
+//AddAt
+[<Test>]
+let ``ATD: Adding at 0 position of zero list`` () = 
+  let list = new ATDList<int> (Nil)
+  (list :> IMyList<int>).AddAt 0 17
+  Assert.AreEqual(list.Self, Cons(17, Nil))
+
+[<Test>]
+let ``ATD: Adding at 5 position of zero list`` () = 
+  let list = new ATDList<int> (Nil)
+  (list :> IMyList<int>).AddAt 5 17
+  Assert.AreEqual(list.Self, Cons (17, Nil))
+
+[<Test>]
+let ``ATD: Adding at 1 existing and 1 non-existing position of non-zero list`` () = 
+  let list = new ATDList<int> (Cons (1, Cons(2, Cons (3, Nil))))
+  (list :> IMyList<int>).AddAt 1 17
+  (list :> IMyList<int>).AddAt -3 78
+  Assert.AreEqual(list.Self, Cons (1, Cons(17, Cons(2, Cons (3, Nil)))))
+[<Test>]
+let ``ATD: Adding at 2 existing positions of non-zero list`` () = 
+  let list = new ATDList<int> (Cons (1, Cons (2, Cons (3, Cons (4, Cons (5, Cons (6, Cons (189, Cons (1, Nil)))))))))
+  (list :> IMyList<int>).AddAt 1 17
+  (list :> IMyList<int>).AddAt 3 78
+  Assert.AreEqual(list.Self, Cons (1, Cons (17 , Cons (2, Cons (78, Cons (3, Cons (4, Cons (5, Cons (6, Cons (189, Cons (1, Nil)))))))))))
+//DelFront
+[<Test>]
+let ``ATD: Deleting at front of zero list`` () = 
+  let list = new ATDList<int> (Nil)
+  let mutable res = ""
+  try
+     (list :> IMyList<int>).DelFront
+     res <- list.Self.ToString ()
+  with
+  | Error (msg) -> 
+        printf "%A" (msg)
+        res <- msg
+  Assert.AreEqual(res, "There's no first value")
+
+[<Test>]
+let ``ATD: Deleting at front of non-zero list`` () = 
+  let list = new ATDList<int> (Cons (1, Cons(2, Cons (3, Nil))))
+  (list :> IMyList<int>).DelFront
+  Assert.AreEqual(list.Self, Cons(2, Cons (3, Nil)))
+
+[<Test>]
+let ``ATD: Deleting at front of list of 1 element twice`` () = 
+  let list = new ATDList<int> (Cons (3, Nil))
+  let mutable res = ""
+  try
+     (list :> IMyList<int>).DelFront
+     (list :> IMyList<int>).DelFront
+     res <- list.Self.ToString ()
+  with
+  | Error (msg) -> 
+        printf "%A" (msg)
+        res <- msg
+  Assert.AreEqual(res, "There's no first value")
+  
+  Assert.AreEqual(list.Self, (Nil : list<int>))
+//DelBack
+[<Test>]
+let ``ATD: Deleting at back of zero list`` () = 
+  let list = new ATDList<int> (Nil)
+  let mutable res = ""
+  try
+     (list :> IMyList<int>).DelBack
+     res <- list.Self.ToString ()
+  with
+  | Error (msg) -> 
+        printf "%A" (msg)
+        res <- msg
+  Assert.AreEqual(res, "There's no last value (the list is empty")
+
+[<Test>]
+let ``ATD: Deleting at back of non-zero list`` () = 
+  let list = new ATDList<int> (Cons (1, Cons(2, Cons (3, Nil))))
+  (list :> IMyList<int>).DelBack
+  Assert.AreEqual(list.Self, Cons (1, Cons(2, Nil)))
+
+[<Test>]
+let ``ATD: Deleting at back of list of 1 element twice`` () = 
+  let list = new ATDList<int> (Nil)
+  let mutable res = ""
+  try
+     (list :> IMyList<int>).DelBack
+     (list :> IMyList<int>).DelBack
+     res <- list.Self.ToString ()
+  with
+  | Error (msg) -> 
+        printf "%A" (msg)
+        res <- msg
+  Assert.AreEqual(res, "There's no last value (the list is empty")
+  
+  Assert.AreEqual(list.Self, (Nil : list<int>))
+//DelAt
+[<Test>]
+let ``ATD: Deleting at 0 position of zero list`` () = 
+  let list = new ATDList<int> (Nil)
+  let mutable res = ""
+  try
+     (list :> IMyList<int>).DelAt 0
+     res <- list.Self.ToString ()
+  with
+  | ErrorWithParam (msg, param) -> 
+        printf "%A" (msg + param)
+        res <- msg + param
+  Assert.AreEqual(res, "DelAt: There's no such index in the list: 0")
+
+[<Test>]
+let ``ATD: Deleting at 0 position of non-zero list`` () = 
+  let list = new ATDList<int> (Cons (1, Cons(2, Cons (3, Nil))))
+  (list :> IMyList<int>).DelAt 0
+  Assert.AreEqual(list.Self, Cons(2, Cons (3, Nil)))
+
+[<Test>]
+let ``ATD: Deleting at 5 position of zero list`` () = 
+  let list = new ATDList<int> (Nil)
+  let mutable res = ""
+  try
+     (list :> IMyList<int>).DelAt 5
+     res <- list.Self.ToString ()
+  with
+  | ErrorWithParam (msg, param) -> 
+        printf "%A" (msg + param)
+        res <- msg + param
+  Assert.AreEqual(res, "DelAt: There's no such index in the list: 5")
+[<Test>]
+let ``ATD: Deleting at 1 existing and 1 non-existing position of non-zero list`` () = 
+  let list = new ATDList<int> (Cons (1, Cons(2, Cons (3, Nil))))
+  let mutable res = ""
+  try
+     (list :> IMyList<int>).DelAt 1
+     (list :> IMyList<int>).DelAt -3
+     res <- list.Self.ToString ()
+  with
+  | ErrorWithParam (msg, param) -> 
+        printf "%A" (msg + param)
+        res <- msg + param
+  Assert.AreEqual(res, "DelAt: There's no such index in the list: -3")
+[<Test>]
+let ``ATD: Deleting at 2 existing positions of non-zero list`` () = 
+  let list = new ATDList<int> (Cons (1, Cons (2, Cons (3, Cons (4, Cons (5, Cons (6, Cons (189, Cons (1, Nil)))))))))
+  (list :> IMyList<int>).DelAt 2
+  (list :> IMyList<int>).DelAt 0
+  Assert.AreEqual(list.Self, (Cons (2, Cons (4, Cons (5, Cons (6, Cons (189, Cons (1, Nil))))))))
+//Find
+[<Test>]
+let ``ATD: Find something in zero list`` () = 
+  let list = new ATDList<int> (Nil)
+  let res = (list :> IMyList<int>).Find 17
+  Assert.AreEqual(res, false)
+[<Test>]
+let ``ATD: Find non-existant (in this list) value in non-zero list`` () = 
+  let list = new ATDList<int> (Cons (1, Cons(2, Cons (3, Nil))))
+  let res = (list :> IMyList<int>).Find 17
+  Assert.AreEqual(res, false)
+[<Test>]
+let ``ATD: Find existant (in this list) value in non-zero list`` () = 
+  let list = new ATDList<double> (Cons (1.1, Cons (2.2, Cons (3.5, Cons (43.5, Cons (5.77, Cons (6.774, Cons (189.4, Cons (1.4, Nil)))))))))
+  let res = (list :> IMyList<double>).Find 43.5
+  Assert.AreEqual(res, true) 
+//Concat
+[<Test>]
+let ``ATD: Concating to zero ATDList zero Arraylist`` () = 
+  let list = new ArrayList<int> ([||], -1)
+  let list2 = new ATDList<int> (Nil)
+  (list2 :> IMyList<int>).Concat list
+  Assert.AreEqual(list2.Self, (Nil : list<int>))
+[<Test>]
+let ``ATD: Concating to zero ATDList non-zero Arraylist`` () = 
+  let list = new ArrayList<int> ([|4; 5; 6|], 2)
+  let list2 = new ATDList<int> (Nil)
+  (list2 :> IMyList<int>).Concat list
+  Assert.AreEqual(list2.Self, Cons (4, Cons (5, Cons (6, Nil))))
+[<Test>]
+let ``ATD: Concating to non-zero ATDList non-zero Arraylist`` () = 
+  let list = new ArrayList<int> ([|17; 893; 122; 1|], 3)
+  let list2 = new ATDList<int> (Cons (4, Cons (5, Cons (6, Nil))))
+  (list2 :> IMyList<int>).Concat list
+  Assert.AreEqual (list2.Self, Cons (4, Cons (5, Cons (6, Cons (17, Cons (893, Cons (122, Cons (1, Nil))))))))
+[<Test>]
+let ``ATD: Concating to non-zero ATDlist zero ArrayList`` () = 
+  let list = new ArrayList<int> ([||], -1)
+  let list2 = new ATDList<int> (Cons (4, Cons (5, Cons (6, Nil))))
+  (list2 :> IMyList<int>).Concat list
+  Assert.AreEqual(list2.Self, Cons (4, Cons (5, Cons (6, Nil))))
+[<Test>]
+let ``ATD: Concating two zero ATDlists`` () = 
+  let list = new ATDList<int> (Nil)
+  let list2 = new ATDList<int> (Nil)
+  (list2 :> IMyList<int>).Concat list
+  Assert.AreEqual(list2.Self, (Nil : list<int>))
+[<Test>]
+let ``ATD: Concating two non-zero ATDlists`` () = 
+  let list = new ATDList<int> (Cons (1, Cons (2, Nil)))
+  let list2 = new ATDList<int> (Cons (17, Nil))
+  (list2 :> IMyList<int>).Concat list
+  Assert.AreEqual(list2.Self, Cons (17, Cons (1, Cons (2, Nil))))
+[<Test>]
+let ``ATD: Concating to zero ATDlist non-zero ATDList`` () = 
+  let list = new ATDList<int> (Nil)
+  let list2 = new ATDList<int> (Cons (4, Cons (5, Cons (6, Nil))))
+  (list2 :> IMyList<int>).Concat list
+  Assert.AreEqual(list2.Self, Cons (4, Cons (5, Cons (6, Nil))))
+[<Test>]
+let ``ATD: Concating to non-zero ATDlist zero ATDList`` () = 
+  let list = new ATDList<int> (Nil)
+  let list2 = new ATDList<int> (Cons (4, Cons (5, Cons (6, Nil))))
+  (list2 :> IMyList<int>).Concat list
+  Assert.AreEqual(list2.Self, Cons (4, Cons (5, Cons (6, Nil)))) 
+let main argv =
   0
