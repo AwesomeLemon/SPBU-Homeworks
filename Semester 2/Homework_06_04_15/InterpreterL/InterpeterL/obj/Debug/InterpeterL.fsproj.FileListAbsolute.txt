@@ -1,0 +1,38 @@
+C:\Users\Alexander\Documents\Visual Studio 2012\Projects\F#\InterpeterL\InterpeterL\obj\Debug\InterpeterL.fsprojResolveAssemblyReference.cache
+C:\Users\Alexander\Documents\Visual Studio 2012\Projects\F#\InterpeterL\InterpeterL\bin\Debug\InterpeterL.exe.config
+C:\Users\Alexander\Documents\Visual Studio 2012\Projects\F#\InterpeterL\InterpeterL\bin\Debug\InterpeterL.XML
+C:\Users\Alexander\Documents\Visual Studio 2012\Projects\F#\InterpeterL\InterpeterL\bin\Debug\InterpeterL.exe
+C:\Users\Alexander\Documents\Visual Studio 2012\Projects\F#\InterpeterL\InterpeterL\bin\Debug\InterpeterL.pdb
+C:\Users\Alexander\Documents\Visual Studio 2012\Projects\F#\InterpeterL\InterpeterL\bin\Debug\FSharp.Core.dll
+C:\Users\Alexander\Documents\Visual Studio 2012\Projects\F#\InterpeterL\InterpeterL\bin\Debug\FSharp.Core.xml
+C:\Users\Alexander\Documents\Visual Studio 2012\Projects\F#\InterpeterL\InterpeterL\bin\Debug\ru\FSharp.Core.resources.dll
+C:\Users\Alexander\Documents\Visual Studio 2012\Projects\F#\InterpeterL\InterpeterL\obj\Debug\InterpeterL.exe
+C:\Users\Alexander\Documents\Visual Studio 2012\Projects\F#\InterpeterL\InterpeterL\obj\Debug\InterpeterL.pdb
+C:\Users\Alexander\Documents\Visual Studio 2012\Projects\F#\InterpeterL\test\InterpeterL.exe.config
+C:\Users\Alexander\Documents\Visual Studio 2012\Projects\F#\InterpeterL\test\InterpeterL.exe
+C:\Users\Alexander\Documents\Visual Studio 2012\Projects\F#\InterpeterL\test\InterpeterL.pdb
+C:\Users\Alexander\Documents\Visual Studio 2012\Projects\F#\InterpeterL\test\InterpeterL.XML
+C:\Users\Alexander\Documents\Visual Studio 2012\Projects\F#\InterpeterL\src\InterpeterL\obj\Debug\InterpeterL.fsprojResolveAssemblyReference.cache
+C:\Users\Alexander\Documents\Visual Studio 2012\Projects\F#\InterpeterL\src\InterpeterL\obj\Debug\InterpeterL.exe
+C:\Users\Alexander\Documents\Visual Studio 2012\Projects\F#\InterpeterL\src\InterpeterL\obj\Debug\InterpeterL.pdb
+C:\Users\Alexander\Desktop\Testing3\test\InterpeterL.exe.config
+C:\Users\Alexander\Desktop\Testing3\test\InterpeterL.exe
+C:\Users\Alexander\Desktop\Testing3\test\InterpeterL.pdb
+C:\Users\Alexander\Desktop\Testing3\test\InterpeterL.XML
+C:\Users\Alexander\Desktop\Testing3\InterpeterL\obj\Debug\InterpeterL.fsprojResolveAssemblyReference.cache
+C:\Users\Alexander\Desktop\Testing3\InterpeterL\obj\Debug\InterpeterL.exe
+C:\Users\Alexander\Desktop\Testing3\InterpeterL\obj\Debug\InterpeterL.pdb
+C:\Users\Alexander\Desktop\HW06.04.15FINAL - копия\test\InterpeterL.exe.config
+C:\Users\Alexander\Desktop\HW06.04.15FINAL - копия\test\InterpeterL.exe
+C:\Users\Alexander\Desktop\HW06.04.15FINAL - копия\test\InterpeterL.pdb
+C:\Users\Alexander\Desktop\HW06.04.15FINAL - копия\test\InterpeterL.XML
+C:\Users\Alexander\Desktop\HW06.04.15FINAL - копия\InterpeterL\obj\Debug\InterpeterL.fsprojResolveAssemblyReference.cache
+C:\Users\Alexander\Desktop\HW06.04.15FINAL - копия\InterpeterL\obj\Debug\InterpeterL.exe
+C:\Users\Alexander\Desktop\HW06.04.15FINAL - копия\InterpeterL\obj\Debug\InterpeterL.pdb
+C:\Users\Alexander\Desktop\HW06.04.15FINAL - копия\InterpeterL\bin\Debug\InterpeterL.exe.config
+C:\Users\Alexander\Desktop\HW06.04.15FINAL - копия\InterpeterL\bin\Debug\InterpeterL.XML
+C:\Users\Alexander\Desktop\HW06.04.15FINAL - копия\InterpeterL\bin\Debug\InterpeterL.exe
+C:\Users\Alexander\Desktop\HW06.04.15FINAL - копия\InterpeterL\bin\Debug\InterpeterL.pdb
+C:\Users\Alexander\Desktop\HW06.04.15FINAL - копия\InterpeterL\bin\Debug\FSharp.Core.dll
+C:\Users\Alexander\Desktop\HW06.04.15FINAL - копия\InterpeterL\bin\Debug\FSharp.Core.xml
+C:\Users\Alexander\Desktop\HW06.04.15FINAL - копия\InterpeterL\bin\Debug\ru\FSharp.Core.resources.dll
