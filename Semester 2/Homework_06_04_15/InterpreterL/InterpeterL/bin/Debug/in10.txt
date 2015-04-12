@@ -1,4 +1,0 @@
-for
-i
-write
-1
