@@ -1,0 +1,3 @@
+In tests for task 37 the "in" files are being formed during testing via simple copying of the input expressions into them (We only need this files because according to the task our function is to have files in input and output both)
+The "opn" files are the results of the function from task 37; they contain expressions in reversed polish notation. These files are passed to tests for task 38 as input files.
+In tests for task 38 we need "data" files only because, again, our function is to have files in input and output both.
