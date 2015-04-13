@@ -53,8 +53,7 @@ let interprete (tree : tree) (input : IInputProvider) (output : IOutputProvider)
     match tree with
     | Read (s) ->
       let varExists elem =  
-        match elem with
-        | (a, _) -> s = a
+        s = fst elem
       if (Array.exists varExists vars) then
         let a = Array.findIndex varExists vars
         vars.[a] <- match vars.[a] with
@@ -68,8 +67,7 @@ let interprete (tree : tree) (input : IInputProvider) (output : IOutputProvider)
       vars <- calcStep r vars 
     | Assign (s, t) ->
       let varExists elem =  
-        match elem with
-        | (a, _) -> s = a
+        s = fst elem
       if (Array.exists varExists vars) then
         let a = Array.findIndex varExists vars
         vars.[a] <- match vars.[a] with
@@ -91,26 +89,4 @@ let interprete (tree : tree) (input : IInputProvider) (output : IOutputProvider)
 
 [<EntryPoint>]
 let main argv = 
- (* let input = new ListInput([10; 9; 15])
-  let output = new ListOutput([])
-  let res = calcStep (toTree "t.in") [||] (input :> IInputProvider) (output :> IOutputProvider)
-  let res = snd res
-  printf "%A" (res.Out ())*)
-  (*let input = new ConsoleInput()
-  let output = new ConsoleOutput()
-  let mutable res = new ConsoleOutput()
-  try
-    res <- ((interprete (toTree "t.in") [||] (input :> IInputProvider) (output :> IOutputProvider)) :?> ConsoleOutput)
-  with
-  | Error (msg) -> (res :> IOutputProvider).Write (msg)
-  printf "%A" ((res :> IOutputProvider).Out ())*)
- (* let input = new ListInput([1000; 2]) :> IInputProvider
-  let output = new ListOutput() :> IOutputProvider
-  try
-    interprete (toTree "test.in") input output
-  with
-  | Error (msg) -> output.Write (msg)
-  | ErrorWithParam (msg, param) -> output.Write (msg + param)
-  printf "%A" ((output :?> ListOutput).Out ())
-  Console.ReadKey() |> ignore*)
   0

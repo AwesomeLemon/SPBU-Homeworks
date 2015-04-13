@@ -44,10 +44,8 @@ let rec calculateTree tree (vars : (string * int) []) =
     | Var (s) ->
       let mutable res = 0
       let varExists elem =  
-        match elem with
-        | (a, _) -> s = a
+        s = fst elem
       if (Array.exists varExists vars) then
-//        let a = Array.findIndex varExists vars
         res <- snd (vars.[Array.findIndex varExists vars])
       else raise (ErrorWithParam ("Unknown variable is being used: ", s)) 
       res
