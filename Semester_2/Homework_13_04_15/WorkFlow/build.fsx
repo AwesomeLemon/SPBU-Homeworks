@@ -9,7 +9,7 @@ Target "Clean" (fun _ ->
 )
 
 Target "BuildApp" (fun _ ->
-  !! "WorkflowF/**/*.fsproj"
+  !! "WorkFlow/**/*.fsproj"
     |> MSBuildRelease buildDir "Build"
     |> Log "AppBuild-Output: "
 )

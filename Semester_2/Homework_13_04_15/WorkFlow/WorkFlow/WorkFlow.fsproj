@@ -5,12 +5,12 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>4bb5de08-51cd-41f6-9776-0fcd9153b88c</ProjectGuid>
+    <ProjectGuid>ffa5f4aa-0fe1-4d60-b6f8-f0debf1fc64c</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>Workflow2</RootNamespace>
-    <AssemblyName>Workflow2</AssemblyName>
+    <RootNamespace>WorkFlow</RootNamespace>
+    <AssemblyName>WorkFlow</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <Name>Workflow2</Name>
+    <Name>WorkFlow</Name>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -21,7 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <WarningLevel>3</WarningLevel>
     <PlatformTarget>AnyCPU</PlatformTarget>
-    <DocumentationFile>bin\Debug\Workflow2.XML</DocumentationFile>
+    <DocumentationFile>bin\Debug\WorkFlow.XML</DocumentationFile>
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -32,7 +32,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <WarningLevel>3</WarningLevel>
     <PlatformTarget>AnyCPU</PlatformTarget>
-    <DocumentationFile>bin\Release\Workflow2.XML</DocumentationFile>
+    <DocumentationFile>bin\Release\WorkFlow.XML</DocumentationFile>
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>

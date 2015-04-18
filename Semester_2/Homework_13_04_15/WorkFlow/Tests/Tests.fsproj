@@ -5,7 +5,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>30f06e12-0087-4273-822e-43076e0b0562</ProjectGuid>
+    <ProjectGuid>15220edb-c02a-4604-8e7e-6796fca10b6f</ProjectGuid>
     <OutputType>Library</OutputType>
     <RootNamespace>Tests</RootNamespace>
     <AssemblyName>Tests</AssemblyName>
@@ -46,9 +46,9 @@
     <Compile Include="TreeTests.fs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Workflow2\Workflow2.fsproj">
-      <Name>Workflow2</Name>
-      <Project>{4bb5de08-51cd-41f6-9776-0fcd9153b88c}</Project>
+    <ProjectReference Include="..\WorkFlow\WorkFlow.fsproj">
+      <Name>WorkFlow</Name>
+      <Project>{ffa5f4aa-0fe1-4d60-b6f8-f0debf1fc64c}</Project>
       <Private>True</Private>
     </ProjectReference>
   </ItemGroup>
