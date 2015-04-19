@@ -1,8 +1,8 @@
 ﻿module RingTests
 open RingWorkflow
 open NUnit.Framework
-[<TestCase(5, 0,TestName = "Arithmetics 1")>]
-[<TestCase(4, 2,TestName = "Arithmetics 2")>]
+[<TestCase(5, 0,TestName = "Result should be from the ring")>]
+[<TestCase(4, 2,TestName = "Different ring returns different result for the same operations")>]
 let calcRing n trueRes=
   let res = RingBuilder n {
     let! a = 2 * 3
@@ -11,8 +11,8 @@ let calcRing n trueRes=
   }
   Assert.AreEqual (res, Some trueRes)
 
-[<TestCase(2, 0, TestName = "Arithmetics 3")>]
-[<TestCase(12, 2, TestName = "Arithmetics 4")>]
+[<TestCase(2, 0, TestName = "Result should be from the ring (other expression is calculated)")>]
+[<TestCase(12, 2, TestName = "Different ring returns different result for the same operations (other expression is calculated)")>]
 let calcRing2 n trueRes=
   let res = RingBuilder n {
     let! a = -2 + -1 * 3

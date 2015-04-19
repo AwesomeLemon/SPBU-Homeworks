@@ -1,6 +1,6 @@
 @echo off
 
 cls
-
-".nuget\NuGet.exe" "Install" "FAKE" "-OutputDirectory" "packages" "-ExcludeVersion"
+powershell -Command "(New-Object Net.WebClient).DownloadFile('http://nuget.org/nuget.exe', 'NuGet.exe')"
+"NuGet.exe" "Install" "FAKE" "-OutputDirectory" "packages" "-ExcludeVersion"
 pause
