@@ -17,3 +17,12 @@ C:\Users\Alexander\Documents\CurrentHW\Threads\Threads\bin\Debug\FSharp.Core.xml
 C:\Users\Alexander\Documents\CurrentHW\Threads\Threads\obj\Debug\Threads.fsprojResolveAssemblyReference.cache
 C:\Users\Alexander\Documents\CurrentHW\Threads\Threads\obj\Debug\Threads.exe
 C:\Users\Alexander\Documents\CurrentHW\Threads\Threads\obj\Debug\Threads.pdb
+C:\Users\Alexander\Documents\GitHub\SPBU-Homeworks\Threads2\Threads\bin\Debug\Threads.exe.config
+C:\Users\Alexander\Documents\GitHub\SPBU-Homeworks\Threads2\Threads\bin\Debug\Threads.XML
+C:\Users\Alexander\Documents\GitHub\SPBU-Homeworks\Threads2\Threads\bin\Debug\Threads.exe
+C:\Users\Alexander\Documents\GitHub\SPBU-Homeworks\Threads2\Threads\bin\Debug\Threads.pdb
+C:\Users\Alexander\Documents\GitHub\SPBU-Homeworks\Threads2\Threads\bin\Debug\FSharp.Core.dll
+C:\Users\Alexander\Documents\GitHub\SPBU-Homeworks\Threads2\Threads\bin\Debug\FSharp.Core.xml
+C:\Users\Alexander\Documents\GitHub\SPBU-Homeworks\Threads2\Threads\obj\Debug\Threads.fsprojResolveAssemblyReference.cache
+C:\Users\Alexander\Documents\GitHub\SPBU-Homeworks\Threads2\Threads\obj\Debug\Threads.exe
+C:\Users\Alexander\Documents\GitHub\SPBU-Homeworks\Threads2\Threads\obj\Debug\Threads.pdb

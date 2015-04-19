@@ -11,3 +11,16 @@ C:\Users\Alexander\Documents\CurrentHW\Threads\Tests\bin\Debug\nunit.framework.x
 C:\Users\Alexander\Documents\CurrentHW\Threads\Tests\obj\Debug\Tests.fsprojResolveAssemblyReference.cache
 C:\Users\Alexander\Documents\CurrentHW\Threads\Tests\obj\Debug\Tests.dll
 C:\Users\Alexander\Documents\CurrentHW\Threads\Tests\obj\Debug\Tests.pdb
+C:\Users\Alexander\Documents\GitHub\SPBU-Homeworks\Threads2\Tests\bin\Debug\Tests.XML
+C:\Users\Alexander\Documents\GitHub\SPBU-Homeworks\Threads2\Tests\bin\Debug\Tests.dll
+C:\Users\Alexander\Documents\GitHub\SPBU-Homeworks\Threads2\Tests\bin\Debug\Tests.pdb
+C:\Users\Alexander\Documents\GitHub\SPBU-Homeworks\Threads2\Tests\bin\Debug\FSharp.Core.dll
+C:\Users\Alexander\Documents\GitHub\SPBU-Homeworks\Threads2\Tests\bin\Debug\nunit.framework.dll
+C:\Users\Alexander\Documents\GitHub\SPBU-Homeworks\Threads2\Tests\bin\Debug\Threads.exe
+C:\Users\Alexander\Documents\GitHub\SPBU-Homeworks\Threads2\Tests\bin\Debug\Threads.pdb
+C:\Users\Alexander\Documents\GitHub\SPBU-Homeworks\Threads2\Tests\bin\Debug\Threads.xml
+C:\Users\Alexander\Documents\GitHub\SPBU-Homeworks\Threads2\Tests\bin\Debug\FSharp.Core.xml
+C:\Users\Alexander\Documents\GitHub\SPBU-Homeworks\Threads2\Tests\bin\Debug\nunit.framework.xml
+C:\Users\Alexander\Documents\GitHub\SPBU-Homeworks\Threads2\Tests\obj\Debug\Tests.fsprojResolveAssemblyReference.cache
+C:\Users\Alexander\Documents\GitHub\SPBU-Homeworks\Threads2\Tests\obj\Debug\Tests.dll
+C:\Users\Alexander\Documents\GitHub\SPBU-Homeworks\Threads2\Tests\obj\Debug\Tests.pdb

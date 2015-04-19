@@ -88,33 +88,34 @@ let matrMul threadNumber (a : int[,]) (b : int[,]) =
     t.Join()
   res.Value
 
-let integralCalcRange (f : float -> float) l r h n=
-//  let n = 100
-  //let h = (r - l) / (float n)
-  let mutable res = 0.0
-  for i in l .. h .. (r - h) do
+let integralCalcRange (f : double -> double) l r h =
+  let mutable res : double = 0.0
+  for i in l .. h .. (r - h + 0.0001) do 
+      //sometimes i get something like 1.200000000000002 instead of 1.2, and that's why I add 0.0001
     res <- res + ((f i) + (f (i + h))) * h * 0.5
   res
 
-let integralCalc threadNumber (f : float -> float) l r =
-  let n = 100
-  let h = (r - l) / (float n)
+let integralCalc threadNumber (f : double -> double) l r cutNumber =
+  let n = cutNumber
+  let h = (r - l) / (double n)
   let res = ref 0.0
-  (*for i in l .. h .. (r - h) do
-    res.Value <- res.Value + ((f i) + (f (i + h))) * h * 0.5*)
-  let step = (r - l) / float threadNumber
+  let step = max (double cutNumber / double threadNumber) (1.0) // / double threadNumber)
+  let threadNumber = min threadNumber cutNumber
   let mutable threadArray = Array.init (threadNumber - 1) (fun i ->
       new Thread(ThreadStart(fun _ ->
-          let i = float i
+          let i = double i
           Monitor.Enter(res)
-          let threadRes = integralCalcRange f (l + i * step) (l + (i+1.0) * step) h n
+          let threadRes = integralCalcRange f (l + i * step * h) (l + (i+1.0) * step* h) h
+          printfn "%A"(l + i * step * h) 
+          printfn "%A" (l + (i+1.0) * step * h)
+          printfn "%A\n" threadRes
           res.Value <- res.Value + threadRes
           Monitor.Exit(res)
         ))
     )
   threadArray <- Array.append threadArray [|new Thread(ThreadStart(fun _ ->
           Monitor.Enter(res)
-          let threadRes = integralCalcRange f (l + float (threadNumber - 1) * step) r h n
+          let threadRes = integralCalcRange f (l + double (threadNumber - 1) * step * h) r h
           res.Value <- res.Value + threadRes
           Monitor.Exit(res)
         ))
@@ -137,5 +138,5 @@ let main argv =
 //  let c = matrMul 1 a b |> printfn "%A"
  // let r = integralCalc 17 (fun x -> sin x ) -3.14 3.14
  //  printfn "%.5f" r
-  let r = integralCalc 1 (fun x -> 1.0 ) -3.0 3.0 |> printfn "%A"
+  let r = integralCalc 50 (fun x -> 1.0 ) -3.0 0.0 10000|> printfn "%A"
   0
