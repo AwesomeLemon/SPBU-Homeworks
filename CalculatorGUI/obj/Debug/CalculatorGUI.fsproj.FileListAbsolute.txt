@@ -1,0 +1,8 @@
+c:\users\alexander\documents\visual studio 2013\Projects\CalculatorGUI\CalculatorGUI\bin\Debug\CalculatorGUI.exe.config
+c:\users\alexander\documents\visual studio 2013\Projects\CalculatorGUI\CalculatorGUI\bin\Debug\CalculatorGUI.XML
+c:\users\alexander\documents\visual studio 2013\Projects\CalculatorGUI\CalculatorGUI\bin\Debug\CalculatorGUI.exe
+c:\users\alexander\documents\visual studio 2013\Projects\CalculatorGUI\CalculatorGUI\bin\Debug\CalculatorGUI.pdb
+c:\users\alexander\documents\visual studio 2013\Projects\CalculatorGUI\CalculatorGUI\bin\Debug\FSharp.Core.dll
+c:\users\alexander\documents\visual studio 2013\Projects\CalculatorGUI\CalculatorGUI\bin\Debug\FSharp.Core.xml
+c:\users\alexander\documents\visual studio 2013\Projects\CalculatorGUI\CalculatorGUI\obj\Debug\CalculatorGUI.exe
+c:\users\alexander\documents\visual studio 2013\Projects\CalculatorGUI\CalculatorGUI\obj\Debug\CalculatorGUI.pdb
