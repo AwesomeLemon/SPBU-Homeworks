@@ -1,0 +1,4 @@
+#!/bin/bash
+echo "Downloading FAKE..."
+nuget Install FAKE -OutputDirectory packages -ExcludeVersion
+chmod +x packages/FAKE/tools/FAKE.exe
