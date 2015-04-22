@@ -1,0 +1,10 @@
+C:\Users\Alexander\Documents\Visual Studio 2012\Projects\F#\CalculatorGUI\CalculatorGUI\obj\Debug\CalculatorGUI.fsprojResolveAssemblyReference.cache
+C:\Users\Alexander\Documents\Visual Studio 2012\Projects\F#\CalculatorGUI\CalculatorGUI\bin\Debug\CalculatorGUI.exe.config
+C:\Users\Alexander\Documents\Visual Studio 2012\Projects\F#\CalculatorGUI\CalculatorGUI\bin\Debug\CalculatorGUI.XML
+C:\Users\Alexander\Documents\Visual Studio 2012\Projects\F#\CalculatorGUI\CalculatorGUI\bin\Debug\CalculatorGUI.exe
+C:\Users\Alexander\Documents\Visual Studio 2012\Projects\F#\CalculatorGUI\CalculatorGUI\bin\Debug\CalculatorGUI.pdb
+C:\Users\Alexander\Documents\Visual Studio 2012\Projects\F#\CalculatorGUI\CalculatorGUI\bin\Debug\FSharp.Core.dll
+C:\Users\Alexander\Documents\Visual Studio 2012\Projects\F#\CalculatorGUI\CalculatorGUI\bin\Debug\FSharp.Core.xml
+C:\Users\Alexander\Documents\Visual Studio 2012\Projects\F#\CalculatorGUI\CalculatorGUI\bin\Debug\ru\FSharp.Core.resources.dll
+C:\Users\Alexander\Documents\Visual Studio 2012\Projects\F#\CalculatorGUI\CalculatorGUI\obj\Debug\CalculatorGUI.exe
+C:\Users\Alexander\Documents\Visual Studio 2012\Projects\F#\CalculatorGUI\CalculatorGUI\obj\Debug\CalculatorGUI.pdb
