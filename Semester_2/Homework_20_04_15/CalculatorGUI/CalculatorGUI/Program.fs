@@ -5,7 +5,7 @@ open System.Drawing
 let mainWidth = 300
 let mainHeight = 300
 
-let programLabel =
+let label =
   let lbl = new Label()
   lbl.Size <- new Size (100, 3)
   lbl.Location <- System.Drawing.Point(0, 0)
@@ -107,7 +107,7 @@ let scanOp (c : char) =
     cl.Arg2Scanned ()
   | _ -> 
     if (cl.oper()).Length <> 0 then 
-      programLabel.Text <- "Two operators in a row"
+      label.Text <- "Two operators in a row"
     else
       cl.changeOp (c.ToString())
       cl.Arg1Scanned ()
@@ -122,7 +122,7 @@ let exitButton (form : Form) =
 
 let cleanAction (but : Button) = 
   cl.Clean()
-  programLabel.Text <- ""
+  label.Text <- ""
 
 let cleanButton () =
   let but = new Button()
@@ -146,7 +146,7 @@ let nooAction (but : Button) =
       else
       cl.changeA "a2" (cl.arg2 () + butText.ToString())
   if (cl.IsReady()) then
-    programLabel.Text <- cl.Calculate ()
+    label.Text <- cl.Calculate ()
 
 let nooButton n x y = //Number or Operator Button
   let but = new Button ()
@@ -155,9 +155,9 @@ let nooButton n x y = //Number or Operator Button
   but.Height <- 30
   but.Location <- System.Drawing.Point(x, y) 
   but.Click.Add ( fun a ->
-    if (programLabel.Text.Length >= 2) then
-      if (System.Char.IsLetter programLabel.Text.[1]) then programLabel.Text <- ""
-    programLabel.Text <- programLabel.Text + but.Text
+    if (label.Text.Length >= 2) then
+      if (System.Char.IsLetter label.Text.[1]) then label.Text <- ""
+    label.Text <- label.Text + but.Text
     nooAction but)
   but
 let mainForm = 
@@ -180,7 +180,7 @@ let mainForm =
   curx <- curx + 40
   form.Controls.Add (nooButton '=' curx cury)
   form.Controls.Add (nooButton 0 (0 + 40) ((mainHeight - 150) + 40))
-  form.Controls.Add (programLabel)
+  form.Controls.Add (label)
   form.Controls.Add (cleanButton ())
   form
 
