@@ -18,7 +18,7 @@ let test (s1 : string) (s2 : string) (op : char) =
     Action s2.[i]
   Action '='
   cl.Clean ()
-  programLabel.Text
+  label.Text
 
 [<TestCase ("1", "-3", "2", '-', '*', Result = "8", TestName = "Two actions")>]
 [<TestCase ("19", "6", "0", '/', '+', Result = "3", TestName = "Two other actions")>]
@@ -34,7 +34,7 @@ let longTest (s1 : string) (s2 : string) (s3 : string) (op1 : char) (op2 : char)
     Action s3.[i]
   Action '='
   cl.Clean ()
-  programLabel.Text
+  label.Text
 
 [<TestCase ('1', '*', '*', '2', Result = "Incorrect input", TestName = "Two multiplication signs in a row")>]
 [<TestCase ('1', '-', '/', '2', Result = "Incorrect input", TestName = "Action sign after the minus")>]
@@ -46,4 +46,4 @@ let test2 a1 o1 o2 a2 =
   Action a2
   Action '='
   cl.Clean ()
-  programLabel.Text
+  label.Text
