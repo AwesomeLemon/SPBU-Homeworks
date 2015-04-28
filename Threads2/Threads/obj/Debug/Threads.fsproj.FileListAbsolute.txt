@@ -1,0 +1,19 @@
+C:\Users\Alexander\Documents\Visual Studio 2012\Projects\F#\Threads\Threads\bin\Debug\Threads.exe.config
+C:\Users\Alexander\Documents\Visual Studio 2012\Projects\F#\Threads\Threads\bin\Debug\Threads.XML
+C:\Users\Alexander\Documents\Visual Studio 2012\Projects\F#\Threads\Threads\bin\Debug\Threads.exe
+C:\Users\Alexander\Documents\Visual Studio 2012\Projects\F#\Threads\Threads\bin\Debug\Threads.pdb
+C:\Users\Alexander\Documents\Visual Studio 2012\Projects\F#\Threads\Threads\bin\Debug\FSharp.Core.dll
+C:\Users\Alexander\Documents\Visual Studio 2012\Projects\F#\Threads\Threads\bin\Debug\FSharp.Core.xml
+C:\Users\Alexander\Documents\Visual Studio 2012\Projects\F#\Threads\Threads\bin\Debug\ru\FSharp.Core.resources.dll
+C:\Users\Alexander\Documents\Visual Studio 2012\Projects\F#\Threads\Threads\obj\Debug\Threads.fsprojResolveAssemblyReference.cache
+C:\Users\Alexander\Documents\Visual Studio 2012\Projects\F#\Threads\Threads\obj\Debug\Threads.exe
+C:\Users\Alexander\Documents\Visual Studio 2012\Projects\F#\Threads\Threads\obj\Debug\Threads.pdb
+C:\Users\Alexander\Documents\CurrentHW\Threads\Threads\bin\Debug\Threads.exe.config
+C:\Users\Alexander\Documents\CurrentHW\Threads\Threads\bin\Debug\Threads.XML
+C:\Users\Alexander\Documents\CurrentHW\Threads\Threads\bin\Debug\Threads.exe
+C:\Users\Alexander\Documents\CurrentHW\Threads\Threads\bin\Debug\Threads.pdb
+C:\Users\Alexander\Documents\CurrentHW\Threads\Threads\bin\Debug\FSharp.Core.dll
+C:\Users\Alexander\Documents\CurrentHW\Threads\Threads\bin\Debug\FSharp.Core.xml
+C:\Users\Alexander\Documents\CurrentHW\Threads\Threads\obj\Debug\Threads.fsprojResolveAssemblyReference.cache
+C:\Users\Alexander\Documents\CurrentHW\Threads\Threads\obj\Debug\Threads.exe
+C:\Users\Alexander\Documents\CurrentHW\Threads\Threads\obj\Debug\Threads.pdb
