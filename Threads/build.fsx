@@ -9,7 +9,7 @@ Target "Clean" (fun _ ->
 )
 
 Target "BuildApp" (fun _ ->
-  !! "InterpreterL/**/*.fsproj"
+  !! "Threads/**/*.fsproj"
     |> MSBuildRelease buildDir "Build"
     |> Log "AppBuild-Output: "
 )
@@ -18,8 +18,6 @@ Target "BuildTest" (fun _ ->
   !! "Tests/**/*.fsproj"
     |> MSBuildDebug testDir "Build"
     |> Log "BuildTest-Output: "
-//  !! "src/Tests/**/*.txt"
-  Copy testDir !!"Tests/**/*.txt"
 )
 
 Target "Test" (fun _ ->
