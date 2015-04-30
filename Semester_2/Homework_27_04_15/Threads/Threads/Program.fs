@@ -59,26 +59,24 @@ let matrMul threadNumber (a : int[,]) (b : int[,]) =
   let alenC = (a.GetLength 1) //Columns
   let blenC = (b.GetLength 1)
   let blenR = (b.GetLength 0)
-  let res = ref (Array2D.zeroCreate alenR blenC)
+  let res = (Array2D.zeroCreate alenR blenC)
   let step = alenR / threadNumber
   if (step = 0) then threadNumber <- alenC
   let mutable threadArray = Array.init (threadNumber - 1) (fun i ->
       
       new Thread(ThreadStart(fun _ ->
-     //     Monitor.Enter(res)
           for k in (i * step) .. ((i + 1) * step - 1) do
             for j in 0 .. blenC - 1 do
-              res.Value.[k, j] <- arMulSum (getRow a k) (getColumn b j)
-     //     Monitor.Exit(res)
+              res.[k, j] <- arMulSum (getRow a k) (getColumn b j)
         ))
       
     )
-  let threadNumber = threadNumber//otherwise there's closure
+  let threadNumber = threadNumber //Otherwise there's closure
   threadArray <- Array.append threadArray [| new Thread(ThreadStart(fun _ ->
           Monitor.Enter(res)
           for k in ((threadNumber - 1) * step) .. (alenR - 1) do
             for j in 0 .. blenC - 1 do
-              res.Value.[k, j] <- arMulSum (getRow a k) (getColumn b j)
+              res.[k, j] <- arMulSum (getRow a k) (getColumn b j)
           Monitor.Exit(res)
         ))
         |]
@@ -87,7 +85,7 @@ let matrMul threadNumber (a : int[,]) (b : int[,]) =
     
   for t in threadArray do
     t.Join()
-  res.Value
+  res
 
 let integralCalcRange (f : double -> double) l r h =
   let mutable res : double = 0.0
@@ -100,7 +98,7 @@ let integralCalc threadNumber (f : double -> double) l r cutNumber =
   let n = cutNumber
   let h = (r - l) / (double n)
   let res = ref 0.0
-  let step = max (double cutNumber / double threadNumber) (1.0) //
+  let step = max (double cutNumber / double threadNumber) (1.0) 
     //in case there're more cuts than threads
   let threadNumber = min threadNumber cutNumber
   let mutable threadArray = Array.init (threadNumber - 1) (fun i ->
@@ -130,14 +128,4 @@ let integralCalc threadNumber (f : double -> double) l r cutNumber =
   
 [<EntryPoint>]
 let main argv = 
- // maxInArTest 40 10  |> printfn "%A"
-  let a = array2D [ [1; 2; 3]; [1; 2; 3]; ]
-  let b = array2D [ [1; 170]; [1; 2]; [1; 2] ]
- // let c = arMulSum [|1; 2; 3|] [|-1; 17; 3|] |> printfn "%A"
- // getRow a 0 |>printfn "%A"
- // getColumn a 1 |>printfn "%A"
-  let c = matrMul 17 a b |> printfn "%A"
- // let r = integralCalc 17 (fun x -> sin x ) -3.14 3.14
- //  printfn "%.5f" r
-//  let r = integralCalc 50 (fun x -> 1.0 ) -3.0 0.0 10000|> printfn "%A"
   0
