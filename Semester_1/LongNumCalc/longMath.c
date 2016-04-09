@@ -231,7 +231,6 @@ void longNum_scan(longNum** x) {
 
 void longNum_mul(longNum x, longNum y, longNum** res) {
 	int tempsign;
-	int overflow = 0;
 	(*res)->sign = 0;
 	if (x.sign == y.sign) {
 		tempsign = 0;
@@ -256,9 +255,8 @@ void longNum_mul_kernel(longNum x, longNum y, longNum** res) {
 	int j;
 	int len = y.digits->len;
 	node* curr1 = x.digits->head;
-	node* curr2 = y.digits->head;
 	int overflow = 0;
-	for (i; i < len; i++) {
+	for (;i < len; i++) {
 		longNum t;
 		int curMul = y.digits->head->val;
 		list_get_list(&(t.digits));
@@ -294,7 +292,6 @@ void longNum_div(longNum x, longNum y, longNum** z) {
 	int flag_lead_zeroes = 0;
 	longNum* t = (longNum*) malloc(sizeof(longNum));
 	node* curr1;
-	node* curr2;
 	int flag_sign = 0;
 	if (!t) {
 		printf("Error: Memory cannot be allocated. Exiting.\n");
@@ -341,7 +338,6 @@ void longNum_div(longNum x, longNum y, longNum** z) {
 	list_reverse(&(y.digits));
 
 	curr1 = x.digits->head;
-	curr2 = y.digits->head;
 	while (curr1) {
 		list_push_front(&(t->digits->head), curr1->val);
 		if ((t->digits->len == 1) && (!t->digits->head->next->val)) { //if t used to be == 0 on previous iteration, this 0 should be deleted now. Otherwise after pushing mistake will occcur: for example, if we push "3" t will equal "30"
